@@ -23,7 +23,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#define FILE_OUTPUT
 
 #include <fstream>
 #include <iostream>
@@ -36,19 +35,12 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-#include "birthday_index.h"
-#include "dense_cubical_grids.h"
-#include "columns_to_reduce.h"
-#include "simplex_coboundary_enumerator.h"
-#include "union_find.h"
-#include "write_pairs.h"
-#include "joint_pairs.h"
-#include "compute_pairs.h"
+#include "cubicalripser_3dim.h"
 
+CubicalRipser3D::CubicalRipser3D(){}
+CubicalRipser3D::~CubicalRipser3D(){}
 
-enum calculation_method { LINKFIND, COMPUTEPAIRS};
-
-void print_usage_and_exit(int exit_code) {
+void CubicalRipser3D::print_usage_and_exit(int exit_code) {
 	 cerr << "Usage: "
 	      << "CR3 "
 	      << "[options] [input_filename]" << endl
@@ -70,66 +62,30 @@ void print_usage_and_exit(int exit_code) {
 	exit(exit_code);
 }
 
-
-int main(int argc, char** argv){
-
-	const char* filename = nullptr;
-	string output_filename = "answer_3dim.diagram"; //default name
-	file_format format = DIPHA;
-	calculation_method method = LINKFIND;
-	double threshold = 99999;
-	bool print = false;
-
-	for (int i = 1; i < argc; ++i) {
-		const string arg(argv[i]);
-		if (arg == "--help") {
-			print_usage_and_exit(0);
-		} else if (arg == "--threshold") {
-			string parameter = string(argv[++i]);
-			size_t next_pos;
-			threshold = stod(parameter, &next_pos);
-			if (next_pos != parameter.size()) print_usage_and_exit(-1);
-		} else if (arg == "--format") {
-			string parameter = string(argv[++i]);
-			if (parameter == "dipha") {
-				format = DIPHA;
-			} else if (parameter == "perseus") {
-				format = PERSEUS;
-			} else {
-				print_usage_and_exit(-1);
-			}
-		} else if(arg == "--method") {
-			string parameter = string(argv[++i]);
-			if (parameter == "link_find") {
-				method = LINKFIND;
-			} else if (parameter == "compute_pairs") {
-				method = COMPUTEPAIRS;
-			} else {
-				print_usage_and_exit(-1);
-			}
-		} else if (arg == "--output") {
-			output_filename = string(argv[++i]);
-		} else if (arg == "--print"){
-			print = true;
-		} else {
-			if (filename) { print_usage_and_exit(-1); }
-			filename = argv[i];
-		}
-	}
-
-    ifstream file_stream(filename);
+void CubicalRipser3D::ComputeBarcode(const char* filename, string output_filename, string format, string method, double threshold, bool print){
+	ifstream file_stream(filename);
 	if (filename && file_stream.fail()) {
-		cerr << "couldn't open file " << filename << endl;
+		cerr << "couldn't open file " << filename << std::endl;
 		exit(-1);
 	}
-
+	
 	vector<WritePairs> writepairs; // dim birth death
 	writepairs.clear();
 	
-	DenseCubicalGrids* dcg = new DenseCubicalGrids(filename, threshold, format);
+	file_format format_type = PERSEUS;
+	if (format == "DIPHA"){
+		format_type = DIPHA;
+	}
+		
+	calculation_method calc_method = LINKFIND;
+	if (method == "COMPUTEPAIRS"){
+		calc_method = COMPUTEPAIRS;
+	}
+			
+	DenseCubicalGrids* dcg = new DenseCubicalGrids(filename, threshold, format_type);
 	ColumnsToReduce* ctr = new ColumnsToReduce(dcg);
 	
-	switch(method){
+	switch(calc_method){
 		case LINKFIND:
 		{
 			JointPairs* jp = new JointPairs(dcg, ctr, writepairs, print);
@@ -157,7 +113,6 @@ int main(int argc, char** argv){
 		}
 	}
 
-#ifdef FILE_OUTPUT
 	ofstream writing_file;
 	
 	string extension = ".csv";
@@ -204,7 +159,4 @@ int main(int argc, char** argv){
 		}
 		writing_file.close();
 	}
-#endif
-
-	return 0;
 }
