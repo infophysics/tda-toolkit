@@ -4,9 +4,7 @@
  * Basic methods for morse complexes
  */
 
-#ifndef MORSE_HPP_
-#define MORSE_HPP_
-
+#pragma once
 
 // copies over non-removed and non-null cells to
 // "other" complex after clearing it out. if forred
@@ -756,5 +754,4 @@ bool MComplex<C,BT>::hasUncritCells(const BT& birth, const num& dim) const
 }
 
 
-#endif /* MORSE_HPP_ */
 

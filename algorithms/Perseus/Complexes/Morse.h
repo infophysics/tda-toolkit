@@ -4,8 +4,7 @@
  * collapses of a Cell Complex
  */
 
-#ifndef MORSE_H_
-#define MORSE_H_
+#pragma once
 
 #include <string>
 #include <deque>
@@ -136,4 +135,3 @@ public:
 	void MorseWrapperExcept_Red(const BT&,const BT&, bool, double);
 };
 
-#endif /* MORSE_H_ */

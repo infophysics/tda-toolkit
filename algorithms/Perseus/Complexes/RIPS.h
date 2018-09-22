@@ -5,8 +5,7 @@
  *      Author: Vidit
  */
 
-#ifndef RIPS_H_
-#define RIPS_H_
+#pragma once
 
 #include "SToplex.hpp"
 // upper triangular matrix to store point-point neighbor relations
@@ -93,4 +92,3 @@ public:
 	void showNbrMatrix(ostream& out) const;
 };
 
-#endif /* RIPS_H_ */

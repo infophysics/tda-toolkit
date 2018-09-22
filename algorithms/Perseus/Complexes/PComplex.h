@@ -5,8 +5,7 @@
  *      Author: Vidit
  */
 
-#ifndef PCOMPLEX_H_
-#define PCOMPLEX_H_
+#pragma once
 
 # include "../Global/Global.h"
 # include "../Cells/PCell.h"
@@ -73,4 +72,3 @@ public:
 
 };
 
-#endif /* PCOMPLEX_H_ */

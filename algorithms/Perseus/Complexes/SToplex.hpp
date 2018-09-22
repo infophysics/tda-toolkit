@@ -4,8 +4,7 @@
  *  Functions to create Cell complexes out of simplicial toplex information!
  */
 
-#ifndef TOPLEX_HPP_
-#define TOPLEX_HPP_
+#pragma once
 
 # include "SToplex.h"
 
@@ -1238,4 +1237,3 @@ bool SToplex<C,PS,BT>::inheritBirths(const num dim)
 
 
 
-#endif /* TOPLEX_HPP_ */

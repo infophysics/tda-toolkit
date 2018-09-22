@@ -5,10 +5,6 @@
  *      Author: Vidit
  */
 
-#ifndef SIZE_H_
-#define SIZE_H_
-
+#pragma once
 typedef long num;
 #define BANDIM -1;
-
-#endif /* SIZE_H_ */

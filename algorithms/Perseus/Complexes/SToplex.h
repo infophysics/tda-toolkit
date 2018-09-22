@@ -4,8 +4,7 @@
  * simplicial and cubical toplex definitions
  */
 
-#ifndef TOPLEX_H_
-#define TOPLEX_H_
+#pragma once
 
 # include <set>
 # include <map>
@@ -116,4 +115,3 @@ public:
 	bool inheritBirths(const num);
 };
 
-# endif // TOPLEX_H

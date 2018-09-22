@@ -65,7 +65,7 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', '--build', '.'] + build_args,
                               cwd=self.build_temp)
         print()  # Add an empty line for cleaner output
-
+ext_compile_args = ["-fpermissive"]
 setup(
     name='tda',
     version='0.1',

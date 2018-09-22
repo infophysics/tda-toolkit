@@ -5,8 +5,7 @@
  *      Author: Vidit
  */
 
-#ifndef PFLAGS_H_
-#define PFLAGS_H_
+#pragma once
 
 // default birth time for every cell!
 #define INITBT (0)
@@ -15,4 +14,3 @@
 // default number of frames to handle movies
 #define MOVFRM (3)
 
-#endif /* PFLAGS_H_ */

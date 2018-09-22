@@ -4,8 +4,7 @@
  *  Member functions for cubical toplexes
  */
 
-#ifndef CTOPLEX_HPP_
-#define CTOPLEX_HPP_
+#pragma once
 
 #include <fstream>
 #include "CToplex.h"
@@ -669,4 +668,3 @@ MComplex<C,BT>* CToplex<C,PS,BT>::readMovie(ifstream& infile)
 	// finally, return reduced complex of movie!
 	return curcomp;
 }
-#endif /* CTOPLEX_HPP_ */

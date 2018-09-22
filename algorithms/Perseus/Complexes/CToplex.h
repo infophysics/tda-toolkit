@@ -4,8 +4,7 @@
  * Cubical Toplex Class Definitions
  */
 
-#ifndef CTOPLEX_H_
-#define CTOPLEX_H_
+#pragma once
 
 #define CUBE_RGMAP map<Point<PS>*, Cell<C,BT>*, ptcomplex<PS> >
 #define CUBE_MAP map<vector<num>*, CUBE_RGMAP*, addcomp >
@@ -123,4 +122,3 @@ public:
 
 
 
-#endif /* CTOPLEX_H_ */

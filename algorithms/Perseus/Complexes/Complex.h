@@ -4,8 +4,7 @@
  */
 
 
-#ifndef COMPLEX_H_
-#define COMPLEX_H_
+#pragma once
 
 # include <list>
 # include <deque>
@@ -110,4 +109,3 @@ public:
 	//bool suspend(num dim); // suspension
 };
 
-#endif /* COMPLEX_H_ */

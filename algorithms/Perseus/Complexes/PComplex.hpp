@@ -4,9 +4,7 @@
  *  Created on: Jan 10, 2011
  *      Author: Vidit
  */
-
-#ifndef PCOMPLEX_HPP_
-#define PCOMPLEX_HPP_
+#pragma once
 
 # include "PComplex.h"
 
@@ -282,4 +280,3 @@ bool PComplex<C,BT>::makeOutputFiles(const string& filename)
 	return true;
 }
 
-#endif /* PCOMPLEX_HPP_ */

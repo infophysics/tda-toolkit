@@ -5,8 +5,7 @@
  *      Author: Vidit
  */
 
-#ifndef COMBINATORICS_H_
-#define COMBINATORICS_H_
+#pragma once
 
 # include "Size.h"
 # include "Debuggers.h"
@@ -62,7 +61,7 @@ num getVPos(const vector<datatype>& svec, const datatype toget)
 
 
 // returns C(n,k)
-num nChoosek(const num n, num k)
+static num nChoosek(const num n, num k)
 {
 	if (k > n || n <= 0) return 0;
 	double ans = 1;
@@ -85,7 +84,7 @@ num nChoosek(const num n, num k)
 // there are n-choose-k distinct subsets. pick any 1 <= p < n-choose-k.
 // arrange [n]_k lexicographically. What is the p-th element? This
 // solution comes from Buckles' algorithm.
-bool lexicoPos (const num n, const num k, const num p, vector<num>& ans)
+static bool lexicoPos (const num n, const num k, const num p, vector<num>& ans)
 {
 
 	if (p > nChoosek(n,k) || p < 0) return false;
@@ -140,7 +139,7 @@ T vProd (const vector<T> tomult)
 // reverses lexicopos. Given [n] = {0,...,n-1} and a subset
 // [n]_k of size k, what is the rank of [n]_k among all k-sized
 // subsets of [n] arranged lexicographically?
-num lexicoPosRev(num n, const vector<num> subset)
+static num lexicoPosRev(num n, const vector<num> subset)
 {
 	num position = 0; // default answer, signals error if size of subset is > 0!
 	num k = subset.size();
@@ -242,4 +241,3 @@ T recompose(const vector<T>& coords, const vector<T>& exts)
 }
 
 
-#endif /* COMBINATORICS_H_ */

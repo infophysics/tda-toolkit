@@ -4,9 +4,7 @@
  *  Shortcut to include all cells
  */
 
-#ifndef ALL_CELL_H_
-#define ALL_CELL_H_
-
+#pragma once
 // basic cell
 #include "Cell.hpp"
 // cube
@@ -20,4 +18,4 @@
 
 
 
-#endif /* ALL_H_ */
+

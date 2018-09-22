@@ -9,72 +9,21 @@
 #include <string>
 #include <algorithm>
 
-#include "Cells/All.h"
-#include "Complexes/All.h"
-#include "Algos/All.h"
-
-// class from which the birth times arise, usually = "int"
-typedef int BC;
-// class defining the ring over which we perform chain algebra, usually = "int"
-typedef int CC;
+#include "Perseus.h"
 
 using namespace std;
 
-// silly string functions for dealing with input arguments, change case
-inline void lowerCase(std::string& s)
-{std::transform(s.begin(), s.end(), s.begin(), ::tolower);}
-
-inline void upperCase(std::string& s)
-{std::transform(s.begin(), s.end(), s.begin(), ::toupper);}
-
-// wrapper declaration for converting input file data to cell complexes;
-// actual functions follow main():
-
-// sparse cubical complex from top cube info
-bool buildCToplexFromFile (ifstream&, MComplex<CC,BC>&, CToplex<CC,int,BC>&);
-// dense cubical complex from top cube info
-bool buildDenseCToplexFromFile (ifstream&, MComplex<CC,BC>&, DenseCToplex<CC,BC>&);
-// uniform triangulation from top simplex info
-bool buildSToplexFromFile (ifstream&, MComplex<CC,BC>&, SToplex<CC,double,BC>&, bool, bool);
-// non-uniform triangulation from top simplex info
-bool buildNMFSToplexFromFile (ifstream&, MComplex<CC,BC>&, SToplex<CC,double,BC>&, bool, bool);
-// rips complex from points with non-uniform birth times
-bool buildRIPSFromFile (ifstream&, MComplex<CC,BC>&, RIPS<CC,double,BC>&);
-// typical rips complex, growing balls around points
-bool buildBRIPSFromFile (ifstream&, MComplex<CC,BC>&, RIPS<CC,double,BC>&,bool,bool,bool);
-// rips complex from point-point distance matrix
-bool buildBRIPSFromDistMatrixFile(ifstream&, MComplex<CC,BC>&, RIPS<CC,double,BC>&,bool);
-// rips complex from delay reconstruction of time series
-bool buildBRIPSFromTimeSeriesFile(ifstream&, MComplex<CC,BC>&, RIPS<CC,double,BC>&);
-
+Perseus::Perseus(){}
+Perseus::~Perseus(){}
 
 // main, here are the currently supported complexes:
 // cubtop, scubtop, rips, brips, brips_comrad, simtop, nmfsimtop, movie
-int main(int argc, char* argv[])
+void Perseus::ComputeBarcode(string input_type, string infile, string outfile, string eng)
 {
 	bool savegens = false; // store generator chains
 	bool truncate = false; // ignore boundary-less cells of top dimension when
-	                       // computing persistence: for rips complexes only.
-	// error message for wrong number of program arguments:
-	if (argc < 3 || argc > 5)
-	{
-		cout<<"\nIncorrect number of arguments!";
-		cout<<"\nUsage: <Program Name> <Input Type> <Input Filename> (optional)<Output Filename> (optional)<Engine>\n";
-		cout<<"Where: \n  1. The acceptable <Input Type> is SimTop, CubTop, Rips, etc... \n";
-		cout<<"  2. If <Output Filename> is unspecified, \"output\" will be used with suffixes.\n";
-		cout<<"  3. The legal <engine> values are R, C and A for reduction, coreduction and alternation.";
-		return -1;
-
-	}
-
-	// obtain string representations of input options:
-	string input_type = argv[1];
-	string infile = argv[2];
-	string outfile = (argc >= 4)? argv[3] : "output";
-	string eng = (argc >= 5) ? argv[4] : "a";
-
-	//cout<<"\neng is "<<eng; cin.get();
-
+		                   // computing persistence: for rips complexes only.
+		// error message for wrong number of program arguments:
 	// verify input file integrity
 	ifstream inf;
 	inf.open(infile.c_str(), ifstream::in);
@@ -82,7 +31,7 @@ int main(int argc, char* argv[])
 	if (!inf.good())
 	{
 		cout<<"\nUnable to Open File "<<infile<<" for reading!";
-		return -2;
+		return;
 	}
 
 	// declare generic cell complex
@@ -105,7 +54,7 @@ int main(int argc, char* argv[])
 
        //if (ans == 'y')
        randcomp.ComputePersistence(n, eng, true);
-       return 0;
+       return;
 
     }
 
@@ -116,7 +65,7 @@ int main(int argc, char* argv[])
 		if (! buildDenseCToplexFromFile(inf, *ccomp, mytop) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 
 	}
@@ -127,7 +76,7 @@ int main(int argc, char* argv[])
 		if (! buildCToplexFromFile(inf, *ccomp, mytop) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 		//cout<<mytop;
 		//ccomp->checkComplex();
@@ -140,7 +89,7 @@ int main(int argc, char* argv[])
 		if (! buildRIPSFromFile (inf, *ccomp, rcomp) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 		// debug?
 		truncate = true;
@@ -152,7 +101,7 @@ int main(int argc, char* argv[])
 		if (! buildBRIPSFromFile (inf, *ccomp, rcomp, false, false, false) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 		truncate = true;
 	}
@@ -162,7 +111,7 @@ int main(int argc, char* argv[])
 		if (! buildBRIPSFromFile (inf, *ccomp, rcomp, false, true, false) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 		truncate = true;
 	}
@@ -173,7 +122,7 @@ int main(int argc, char* argv[])
 		if (! buildBRIPSFromFile (inf, *ccomp, rcomp, true, true, false) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 		truncate = true;
 	}
@@ -184,7 +133,7 @@ int main(int argc, char* argv[])
 		if (! buildBRIPSFromFile (inf, *ccomp, rcomp, true, true, false) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 		truncate = true;
 	}
@@ -195,9 +144,9 @@ int main(int argc, char* argv[])
 		if (! buildBRIPSFromFile (inf, *ccomp, rcomp, true, true, true) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
-		truncate = true;
+		truncate = 1;
 	}
 	// rips complex from distance matrix
 	else if (input_type == "distmat")
@@ -206,9 +155,9 @@ int main(int argc, char* argv[])
 		if (! buildBRIPSFromDistMatrixFile (inf, *ccomp, rcomp, false) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
-		truncate = true;
+		truncate = 1;
 	}
 	// rips complex from correlation matrix
 	else if (input_type == "corrmat")
@@ -217,9 +166,9 @@ int main(int argc, char* argv[])
 		if (! buildBRIPSFromDistMatrixFile (inf, *ccomp, rcomp, true) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
-		truncate = true;
+		truncate = 1;
 	}
 
 	// time series delay reconstruction
@@ -229,9 +178,9 @@ int main(int argc, char* argv[])
         if (!buildBRIPSFromTimeSeriesFile (inf, *ccomp, rcomp) )
         {
             cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
         }
-        truncate = true;
+        truncate = 1;
     }
 
 
@@ -243,7 +192,7 @@ int main(int argc, char* argv[])
 		if (! buildSToplexFromFile (inf, *ccomp, stop, true, false) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 	}
 
@@ -254,7 +203,7 @@ int main(int argc, char* argv[])
 		if (! buildSToplexFromFile (inf, *ccomp, stop, false, false) )
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 	}
 	// ::::::::::::NON MANIFOLD TOP SIMPLEX DATA::::::::::::::::
@@ -265,7 +214,7 @@ int main(int argc, char* argv[])
 		if (! buildNMFSToplexFromFile (inf, *ccomp, stop, false, true) )
 		{
 				cout<<"\nFile "<<infile<<" exists but contains bogus data";
-				return -3;
+				return;
 		}
 		//truncate = true;
 	}
@@ -276,7 +225,7 @@ int main(int argc, char* argv[])
 		if (! buildNMFSToplexFromFile (inf, *ccomp, stop, true, true) )
 		{
 				cout<<"\nFile "<<infile<<" exists but contains bogus data";
-				return -3;
+				return;
 		}
 		//truncate = true;
 	}
@@ -287,7 +236,7 @@ int main(int argc, char* argv[])
 		if (! buildNMFSToplexFromFile (inf, *ccomp, stop, true, false) )
 		{
 				cout<<"\nFile "<<infile<<" exists but contains bogus data";
-				return -3;
+				return;
 		}
 		//truncate = true;
 	}
@@ -299,7 +248,7 @@ int main(int argc, char* argv[])
 		if (! buildNMFSToplexFromFile (inf, *ccomp, stop, false, false) )
 		{
 				cout<<"\nFile "<<infile<<" exists but contains bogus data";
-				return -3;
+				return;
 		}
 		//truncate = true;
 	}
@@ -311,8 +260,8 @@ int main(int argc, char* argv[])
 
 	    SToplex<CC, num, double> stop;
 	    ifstream edgef;
-	    cout<<" trying to open: "<<argv[3];
-	    edgef.open(argv[3], ifstream::in);
+	    cout <<" trying to open: " << infile;
+	    edgef.open(infile, ifstream::in);
 
 	    stop.makeRicci(inf,edgef);
 	    stop.writeComplex(*dcomp);
@@ -333,7 +282,7 @@ int main(int argc, char* argv[])
         //pcomp.showBetti();
 
         delete dcomp;
-        return 0;
+        return;
 	}
 
     else if (input_type == "bary")
@@ -367,7 +316,7 @@ int main(int argc, char* argv[])
             if (iores.second == false)
             {
                 outf<<"\n File Error! \n";
-                return -1;
+                return;
             }
 
             mycomp = new MComplex<CC,BC>;
@@ -447,7 +396,7 @@ int main(int argc, char* argv[])
         outf.close();
 
 
-        return 0;
+        return;
     }
 
 	else if (input_type == "cubmov")
@@ -458,7 +407,7 @@ int main(int argc, char* argv[])
 		if (mycomp == NULL)
 		{
 			cout<<"\nFile "<<infile<<" exists but contains bogus data";
-			return -3;
+			return;
 		}
 		mycomp->MorseWrapper_Cored(savegens);
 		PComplex<CC,BC> mypc;
@@ -473,13 +422,13 @@ int main(int argc, char* argv[])
 		mypc.showBetti();
 		if (FLOWTALK) cout<<"\n\nDone!!! Please consult ["<<outfile<<"*.txt] for results.\n\n";
 		delete mycomp;
-		return 0;
+		return;
 	}
 
 	else
 	{
 		cout<<"\nThe Data format \""<<input_type<<"\" is currently unsupported.";
-		return 0;
+		return;
 	}
 
 	if(FLOWTALK)
@@ -540,7 +489,7 @@ int main(int argc, char* argv[])
 	//delete ccomp;
 
 	if (FLOWTALK) cout<<"\n\nDone!!! Please consult ["<<outfile<<"*.txt] for results.\n\n";
-	return 0;
+	return;
 }
 
 // subroutine to construct cell complex from dense cubical toplex information. The text
@@ -561,7 +510,7 @@ int main(int argc, char* argv[])
 // :
 // :
 // <birth time of cube at (e_1 - 1),(e_2 - 1),...,(e_n - 1)>
-bool buildDenseCToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, DenseCToplex<CC,BC>& mytop)
+bool Perseus::buildDenseCToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, DenseCToplex<CC,BC>& mytop)
 {
 	pair<num,bool> iores = mytop.makeFromFile(inf);
 	inf.close();
@@ -583,7 +532,7 @@ bool buildDenseCToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, DenseCTop
 	return true;
 }
 
-bool buildCToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, CToplex<CC,int,BC>& mytop)
+bool Perseus::buildCToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, CToplex<CC,int,BC>& mytop)
 {
 	pair<num,bool> iores = mytop.makeFromFile(inf);
 	inf.close();
@@ -614,7 +563,7 @@ bool buildCToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, CToplex<CC,int
 // :
 // <n coordinates of point k> <radius of neighbor cutoff ball> <birth time>
 
-bool buildRIPSFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>& rcomp)
+bool Perseus::buildRIPSFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>& rcomp)
 {
 	pair<num,bool> iores = rcomp.makeFromFile(inf);
 	inf.close();
@@ -651,7 +600,7 @@ bool buildRIPSFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, 
 // :
 // <n coordinates of point k> <radius of neighbor cutoff ball>
 
-bool buildBRIPSFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>& rcomp,
+bool Perseus::buildBRIPSFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>& rcomp,
                           bool comred = false, bool capped=false, bool witness=false)
 {
 	pair<num,bool> iores = rcomp.makeFromFile_GrowBalls(inf,comred,capped,witness);
@@ -684,7 +633,7 @@ bool buildBRIPSFromFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double,
 // <dist to p1> <dist to p2> <dist to p3> .... <dist to pn>
 // :
 // :
-bool buildBRIPSFromDistMatrixFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>&
+bool Perseus::buildBRIPSFromDistMatrixFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>&
                                    rcomp, bool iscorrmat = true)
 {
     pair<num,bool> iores = rcomp.makeFromDistMatrixFile(inf,iscorrmat,false);
@@ -714,7 +663,7 @@ bool buildBRIPSFromDistMatrixFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<C
 	return true;
 }
 
-bool buildBRIPSFromTimeSeriesFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>& rcomp)
+bool Perseus::buildBRIPSFromTimeSeriesFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<CC, double, BC>& rcomp)
 {
     pair<num,bool> iores = rcomp.makeFromTimeSeriesFile(inf);
 	inf.close();
@@ -751,7 +700,7 @@ bool buildBRIPSFromTimeSeriesFile (ifstream& inf, MComplex<CC,BC>& ccomp, RIPS<C
 // <x_11,...,x_1n> <x_21,...,x_2n> ... <x_(m+1)1,...x_(m+1)n> <birth time> { i.e. vertex coords and birth time }
 // : [same as above for next simplex]
 // : [ etc ]
-bool buildSToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp,
+bool Perseus::buildSToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp,
                            SToplex<CC,double,BC>& stop, bool births = true,
                            bool hascap=false)
 {
@@ -780,7 +729,7 @@ bool buildSToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp,
 // <dim of simplex, m> <x_11,...,x_1n> <x_21,...,x_2n> ... <x_(m+1)1,...x_(m+1)n> <birth time>
 // : [ similarly for other simplices, each with its own dim m ]
 
-bool buildNMFSToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp,
+bool Perseus::buildNMFSToplexFromFile (ifstream& inf, MComplex<CC,BC>& ccomp,
                               SToplex<CC,double,BC>& stop, bool tocap = false,
                               bool hasbirths = true)
 {

@@ -5,8 +5,7 @@
  *      Author: Vidit
  */
 
-#ifndef DENSECTOPLEX_HPP_
-#define DENSECTOPLEX_HPP_
+#pragma once
 
 #include "DenseCToplex.h"
 
@@ -602,4 +601,3 @@ void DenseCToplex<C,BT>::ComputePersistence(string fname = "output")
 
 }
 
-#endif /* DENSECTOPLEX_HPP_ */

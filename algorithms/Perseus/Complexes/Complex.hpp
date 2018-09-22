@@ -3,9 +3,7 @@
  * Basic Complex Methods: Insertion, Removal, Check for containment
  */
 
-
-#ifndef COMPLEX_HPP_
-#define COMPLEX_HPP_
+#pragma once
 
 #include "Complex.h"
 
@@ -898,4 +896,3 @@ void Complex<C,BT>::clearDim(num dim)
 }
 
 
-#endif /* COMPLEX_HPP_ */

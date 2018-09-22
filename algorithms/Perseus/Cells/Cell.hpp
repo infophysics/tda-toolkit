@@ -3,8 +3,7 @@
  * Contains Function Definitions for PCell.h
  */
 
-#ifndef CELL_HPP_
-#define CELL_HPP_
+#pragma once
 
 # include "../DebugV.h"
 # include "Cell.h"
@@ -588,5 +587,3 @@ num Chain<C,D>::bdsum() const
     }
     return toret;
 }
-
-#endif /* CELL_HPP_ */

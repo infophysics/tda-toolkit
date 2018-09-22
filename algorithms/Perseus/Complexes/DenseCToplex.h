@@ -4,8 +4,7 @@
  *  Attempt at an efficient way to compute persistence intervals on an integer cubical grid
  */
 
-#ifndef DENSECTOPLEX_H_
-#define DENSECTOPLEX_H_
+#pragma once
 
 #include "../Cells/Cell.hpp"
 #include "../Global/Global.h"
@@ -107,4 +106,3 @@ public:
 	void ComputePersistence(string);
 };
 
-#endif /* DENSECTOPLEX_H_ */

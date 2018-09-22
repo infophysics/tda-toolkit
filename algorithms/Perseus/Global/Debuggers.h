@@ -5,8 +5,7 @@
  *      Author: Vidit
  */
 
-#ifndef DEBUGGERS_H_
-#define DEBUGGERS_H_
+#pragma once
 
 #include<ostream>
 #include<deque>
@@ -65,4 +64,3 @@ void printQ(deque<data_ptr>& myq, ostream& out = cout)
 	out<<'\n';
 }
 
-#endif /* DEBUGGERS_H_ */

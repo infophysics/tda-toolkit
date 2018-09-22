@@ -3,9 +3,7 @@
  *
  *  Shortcut header file to include All Complexes at once!
  */
-
-#ifndef ALL_COMP_H_
-#define ALL_COMP_H_
+#pragma once
 
 // basic cell complex
 #include "Complex.hpp"
@@ -21,4 +19,4 @@
 #include "DenseCToplex.hpp"
 // persistent complex
 #include "PComplex.hpp"
-#endif /* ALL_COMP_H_ */
+

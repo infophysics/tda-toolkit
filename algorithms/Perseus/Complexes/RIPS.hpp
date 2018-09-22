@@ -5,8 +5,7 @@
  */
 
 
-#ifndef RIPS_HPP_
-#define RIPS_HPP_
+#pragma once
 
 #include <algorithm> // for set intersections!
 #include <cmath> // for ceil and floor etc.
@@ -1283,4 +1282,3 @@ pair<num,bool> RIPS<C,PS,BT>::makeFromTimeSeriesFile(ifstream& infile)
 	return make_pair(vert.size(),true);
 }
 
-#endif /* RIPS_HPP_ */
