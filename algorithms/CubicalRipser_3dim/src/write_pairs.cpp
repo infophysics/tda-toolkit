@@ -30,21 +30,21 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "write_pairs.h"
 
-WritePairs::WritePairs(int64_t _dim, double _birth, double _death){
+WritePairs2::WritePairs2(int64_t _dim, double _birth, double _death){
 	dim = _dim;
 	birth = _birth;
 	death = _death;
 }
 
-int64_t WritePairs::getDimension(){
+int64_t WritePairs2::getDimension2(){
 	return dim;
 }
 
-double WritePairs::getBirth(){
+double WritePairs2::getBirth2(){
 	return birth;
 }
 
-double WritePairs::getDeath(){
+double WritePairs2::getDeath2(){
 	return death;
 }
 	

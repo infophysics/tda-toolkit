@@ -37,13 +37,13 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-DenseCubicalGrids::DenseCubicalGrids(const string& filename, double _threshold, file_format _format)  {
+DenseCubicalGrids2::DenseCubicalGrids2(const string& filename, double _threshold, file_format2 _format)  {
 
 	threshold = _threshold;
 	format = _format;
 
 	switch(format){
-		case DIPHA:
+		case DIPHA2:
 		{
 			ifstream reading_file; 
 
@@ -90,7 +90,7 @@ DenseCubicalGrids::DenseCubicalGrids(const string& filename, double _threshold, 
 			break;
 		}
 
-		case PERSEUS:
+		case PERSEUS2:
 		{
 			ifstream reading_file; 
 			reading_file.open(filename.c_str(), ios::in); 
@@ -131,7 +131,7 @@ DenseCubicalGrids::DenseCubicalGrids(const string& filename, double _threshold, 
 }
 
 
-double DenseCubicalGrids::getBirthday(int index, int dim){
+double DenseCubicalGrids2::getBirthday2(int index, int dim){
 	int cx = index & 0x01ff;
 	int cy = (index >> 9) & 0x01ff;
 	int cz = (index >> 18) & 0x01ff;
@@ -171,11 +171,11 @@ double DenseCubicalGrids::getBirthday(int index, int dim){
 }
 
 
-void DenseCubicalGrids::GetSimplexVertices(int index, int dim, Vertices* v){
+void DenseCubicalGrids2::GetSimplexVertices2(int index, int dim, Vertices2* v){
 	int cx = index & 0x01ff;
 	int cy = (index >> 9) & 0x01ff;
 	int cz = (index >> 18) & 0x01ff;
 	int cm = (index >> 27) & 0xff;
 
-	v -> setVertices(dim ,cx, cy, cz , cm);
+	v -> setVertices2(dim ,cx, cy, cz , cm);
 }

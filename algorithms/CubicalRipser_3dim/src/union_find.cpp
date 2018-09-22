@@ -36,18 +36,18 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-UnionFind::UnionFind(int moi, DenseCubicalGrids* _dcg) : parent(moi), birthtime(moi), time_max(moi) { // Thie "n" is the number of cubes.
+UnionFind2::UnionFind2(int moi, DenseCubicalGrids2* _dcg) : parent(moi), birthtime(moi), time_max(moi) { // Thie "n" is the number of cubes.
 	dcg = _dcg;
 	max_of_index = moi;
 
 	for(int i = 0; i < moi; ++i){
 		parent[i] = i;
-		birthtime[i] = dcg -> getBirthday(i, 0);
-		time_max[i] = dcg -> getBirthday(i, 0);
+		birthtime[i] = dcg -> getBirthday2(i, 0);
+		time_max[i] = dcg -> getBirthday2(i, 0);
 	}
 }
 
-int UnionFind::find(int x){ // Thie "x" is Index.
+int UnionFind2::find2(int x){ // Thie "x" is Index.
 	int y = x, z = parent[y];
 	while (z != y) {
 		y = z;
@@ -62,9 +62,9 @@ int UnionFind::find(int x){ // Thie "x" is Index.
 	return z;
 }
 
-void UnionFind::link(int x, int y){
-	x = find(x);
-	y = find(y);
+void UnionFind2::link2(int x, int y){
+	x = find2(x);
+	y = find2(y);
 	if (x == y) return;
 	if (birthtime[x] > birthtime[y]){
 		parent[x] = y; 

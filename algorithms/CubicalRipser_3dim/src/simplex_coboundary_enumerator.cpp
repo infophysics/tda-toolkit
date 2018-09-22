@@ -38,16 +38,16 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-SimplexCoboundaryEnumerator::SimplexCoboundaryEnumerator(){
-	vtx = new Vertices();
-	nextCoface = BirthdayIndex(0, -1, 1);
+SimplexCoboundaryEnumerator2::SimplexCoboundaryEnumerator2(){
+	vtx = new Vertices2();
+	nextCoface = BirthdayIndex2(0, -1, 1);
 }
 	
 
-void SimplexCoboundaryEnumerator::setSimplexCoboundaryEnumerator(BirthdayIndex _s, DenseCubicalGrids* _dcg) {
+void SimplexCoboundaryEnumerator2::setSimplexCoboundaryEnumerator2(BirthdayIndex2 _s, DenseCubicalGrids2* _dcg) {
 	simplex = _s;
 	dcg = _dcg;
-	_dcg -> GetSimplexVertices(simplex.index, simplex.dim, vtx);
+	_dcg -> GetSimplexVertices2(simplex.index, simplex.dim, vtx);
 	birthtime = simplex.birthday;
 	ax = _dcg -> ax;
 	ay = _dcg -> ay;
@@ -58,7 +58,7 @@ void SimplexCoboundaryEnumerator::setSimplexCoboundaryEnumerator(BirthdayIndex _
 }
 
 
-bool SimplexCoboundaryEnumerator::hasNextCoface() {
+bool SimplexCoboundaryEnumerator2::hasNextCoface2() {
 	int index = 0;
 	double birthday = 0;
 	cx = vtx -> ox;
@@ -100,7 +100,7 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 			}
 			if (birthday != threshold) {
 				count = i + 1;
-				nextCoface = BirthdayIndex(birthday, index, 1);
+				nextCoface = BirthdayIndex2(birthday, index, 1);
 				return true;
 			}
 		}
@@ -134,7 +134,7 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 
 				if (birthday != threshold) {
 					count = i + 1;
-					nextCoface = BirthdayIndex(birthday, index, 2);
+					nextCoface = BirthdayIndex2(birthday, index, 2);
 					return true;
 				}
 			}
@@ -165,7 +165,7 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 				}
 				if (birthday != threshold) {
 					count = i + 1;
-					nextCoface = BirthdayIndex(birthday, index, 2);
+					nextCoface = BirthdayIndex2(birthday, index, 2);
 					return true;
 				}
 			}
@@ -196,7 +196,7 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 				}
 				if (birthday != threshold) {
 					count = i + 1;
-					nextCoface = BirthdayIndex(birthday, index, 2);
+					nextCoface = BirthdayIndex2(birthday, index, 2);
 					return true;
 				}
 			}
@@ -224,7 +224,7 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 				}
 				if (birthday != threshold) {
 					count = i + 1;
-					nextCoface = BirthdayIndex(birthday, index, 3);
+					nextCoface = BirthdayIndex2(birthday, index, 3);
 					return true;
 				}
 			}
@@ -248,7 +248,7 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 				}
 				if (birthday != threshold) {
 					count = i + 1;
-					nextCoface = BirthdayIndex(birthday, index, 3);
+					nextCoface = BirthdayIndex2(birthday, index, 3);
 					return true;
 				}
 			}
@@ -272,7 +272,7 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 				}
 				if (birthday != threshold) {
 					count = i + 1;
-					nextCoface = BirthdayIndex(birthday, index, 3);
+					nextCoface = BirthdayIndex2(birthday, index, 3);
 					return true;
 				}
 			}
@@ -282,6 +282,6 @@ bool SimplexCoboundaryEnumerator::hasNextCoface() {
 	}
 }
 
-BirthdayIndex SimplexCoboundaryEnumerator::getNextCoface() {
+BirthdayIndex2 SimplexCoboundaryEnumerator2::getNextCoface2() {
 	return nextCoface;
 }

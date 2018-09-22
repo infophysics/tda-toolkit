@@ -32,17 +32,17 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-class UnionFind{
+class UnionFind2{
 public:
 	int max_of_index;
 	vector<int> parent;
 	vector<double> birthtime;
 	vector<double> time_max;
-	DenseCubicalGrids* dcg;
+	DenseCubicalGrids2* dcg;
 
-	UnionFind(int moi, DenseCubicalGrids* _dcg); // Thie "n" is the number of cubes.
+	UnionFind2(int moi, DenseCubicalGrids2* _dcg); // Thie "n" is the number of cubes.
 	
-	int find(int x); // Thie "x" is Index.
+	int find2(int x); // Thie "x" is Index.
 	
-	void link(int x, int y);
+	void link2(int x, int y);
 };

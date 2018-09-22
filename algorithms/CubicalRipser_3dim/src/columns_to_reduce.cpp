@@ -36,7 +36,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-ColumnsToReduce::ColumnsToReduce(DenseCubicalGrids* _dcg) { 
+ColumnsToReduce2::ColumnsToReduce2(DenseCubicalGrids2* _dcg) { 
 	dim = 0;
 	int ax = _dcg -> ax;
 	int ay = _dcg -> ay;
@@ -51,14 +51,14 @@ ColumnsToReduce::ColumnsToReduce(DenseCubicalGrids* _dcg) {
 				birthday = _dcg -> dense3[x][y][z];
 				index = x | (y << 9) | (z << 18);
 				if (birthday != _dcg -> threshold) {
-					columns_to_reduce.push_back(BirthdayIndex(birthday, index, 0));
+					columns_to_reduce.push_back(BirthdayIndex2(birthday, index, 0));
 				}
 			}
 		}
 	}
-	sort(columns_to_reduce.begin(), columns_to_reduce.end(), BirthdayIndexComparator());
+	sort(columns_to_reduce.begin(), columns_to_reduce.end(), BirthdayIndexComparator2());
 }
 
-int ColumnsToReduce::size() {
+int ColumnsToReduce2::size2() {
 	return columns_to_reduce.size();
 }

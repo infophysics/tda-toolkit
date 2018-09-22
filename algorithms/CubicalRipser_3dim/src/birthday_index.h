@@ -28,7 +28,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-class BirthdayIndex
+class BirthdayIndex2
 {
 	
 public:
@@ -36,31 +36,31 @@ public:
 	int index;
 	int dim;
 
-	BirthdayIndex();
+	BirthdayIndex2();
 		
-	BirthdayIndex(double _b, int _i, int _d);
+	BirthdayIndex2(double _b, int _i, int _d);
 
-	BirthdayIndex(const BirthdayIndex& b);
+	BirthdayIndex2(const BirthdayIndex2& b);
 
-	void copyBirthdayIndex(BirthdayIndex v);
+	void copyBirthdayIndex2(BirthdayIndex2 v);
 
-	double getBirthday();
+	double getBirthday2();
 
-	long getIndex();
+	long getIndex2();
 
-	int getDimension();
+	int getDimension2();
 
-	void print();
+	void print2();
 
-	void VertexPrint();
+	void VertexPrint2();
 };
 
-struct BirthdayIndexComparator
+struct BirthdayIndexComparator2
 {
-	bool operator()(const BirthdayIndex& o1, const BirthdayIndex& o2) const; 
+	bool operator()(const BirthdayIndex2& o1, const BirthdayIndex2& o2) const; 
 };
 
-struct BirthdayIndexInverseComparator
+struct BirthdayIndexInverseComparator2
 {
-	bool operator()(const BirthdayIndex& o1, const BirthdayIndex& o2) const;	
+	bool operator()(const BirthdayIndex2& o1, const BirthdayIndex2& o2) const;	
 };

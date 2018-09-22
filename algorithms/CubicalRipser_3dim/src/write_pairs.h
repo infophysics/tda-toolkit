@@ -30,19 +30,19 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <cstdint>
 
-class WritePairs
+class WritePairs2
 {
 public:
 	int64_t dim;
 	double birth;
 	double death;
 
-	WritePairs(int64_t _dim, double _birth, double _death);
+	WritePairs2(int64_t _dim, double _birth, double _death);
 
-	int64_t getDimension();
+	int64_t getDimension2();
 
-	double getBirth();
+	double getBirth2();
 
-	double getDeath();
+	double getDeath2();
 	
 };

@@ -33,22 +33,22 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-class JointPairs{
+class JointPairs2{
 
 	int n; // the number of cubes
 	int ctr_moi;
 	int ax, ay, az;
-	DenseCubicalGrids* dcg;
-	ColumnsToReduce* ctr;
-	vector<WritePairs> *wp;
+	DenseCubicalGrids2* dcg;
+	ColumnsToReduce2* ctr;
+	vector<WritePairs2> *wp;
 	bool print;
-	Vertices* vtx;
+	Vertices2* vtx;
 	double u, v;
 	vector<int64_t> cubes_edges;
-	vector<BirthdayIndex> dim1_simplex_list;
+	vector<BirthdayIndex2> dim1_simplex_list2;
 
 public:
-	JointPairs(DenseCubicalGrids* _dcg, ColumnsToReduce* _ctr, vector<WritePairs> &_wp, const bool _print);
+	JointPairs2(DenseCubicalGrids2* _dcg, ColumnsToReduce2* _ctr, vector<WritePairs2> &_wp, const bool _print);
 
-	void joint_pairs_main();
+	void joint_pairs_main2();
 };

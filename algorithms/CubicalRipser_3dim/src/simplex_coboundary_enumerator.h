@@ -28,24 +28,24 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-class SimplexCoboundaryEnumerator
+class SimplexCoboundaryEnumerator2
 {
 public:
-	BirthdayIndex simplex;
-	DenseCubicalGrids* dcg;
-	Vertices* vtx;
+	BirthdayIndex2 simplex;
+	DenseCubicalGrids2* dcg;
+	Vertices2* vtx;
 	double birthtime;
 	int ax, ay, az;
 	int cx, cy, cz;
 	int count;
-	BirthdayIndex nextCoface;
+	BirthdayIndex2 nextCoface;
 	double threshold;
 
-	SimplexCoboundaryEnumerator();
+	SimplexCoboundaryEnumerator2();
 
-	void setSimplexCoboundaryEnumerator(BirthdayIndex _s, DenseCubicalGrids* _dcg); 
+	void setSimplexCoboundaryEnumerator2(BirthdayIndex2 _s, DenseCubicalGrids2* _dcg); 
 
-	bool hasNextCoface(); 
+	bool hasNextCoface2(); 
 
-	BirthdayIndex getNextCoface();
+	BirthdayIndex2 getNextCoface2();
 };

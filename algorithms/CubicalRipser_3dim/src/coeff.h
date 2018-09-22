@@ -27,19 +27,19 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-class Coeff
+class Coeff2
 {
 public:
 	int cx, cy, cz, cm;
 
-	Coeff();
+	Coeff2();
 
 	void setXYZ(int _cx, int _cy, int _cz);
 
 	void setXYZM(int _cx, int _cy, int _cz, int _cm);
 
-	void setIndex(int index);
+	void setIndex2(int index);
 
-	int getIndex();
+	int getIndex2();
 
 };

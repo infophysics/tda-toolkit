@@ -33,47 +33,47 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-BirthdayIndex::BirthdayIndex(){
+BirthdayIndex2::BirthdayIndex2(){
 	birthday = 0;
 	index = -1;
 	dim = 1;
 }
 
-BirthdayIndex::BirthdayIndex(double _b, int _i, int _d){
+BirthdayIndex2::BirthdayIndex2(double _b, int _i, int _d){
 	birthday = _b;
 	index = _i;
 	dim = _d;
 }
 
-BirthdayIndex::BirthdayIndex(const BirthdayIndex& b){
+BirthdayIndex2::BirthdayIndex2(const BirthdayIndex2& b){
 	birthday = b.birthday;
 	index = b.index;
 	dim = b.dim;
 }
 
-void BirthdayIndex::copyBirthdayIndex(BirthdayIndex v){
+void BirthdayIndex2::copyBirthdayIndex2(BirthdayIndex2 v){
 	birthday = v.birthday;
 	index = v.index;
 	dim = v.dim;
 }
 
-double BirthdayIndex::getBirthday(){
+double BirthdayIndex2::getBirthday2(){
 	return birthday;
 }
 
-long BirthdayIndex::getIndex(){
+long BirthdayIndex2::getIndex2(){
 	return index;
 }
 
-int BirthdayIndex::getDimension(){
+int BirthdayIndex2::getDimension2(){
 	return dim;
 }
 
-void BirthdayIndex::print(){
+void BirthdayIndex2::print2(){
 	std::cout << "(dob:" << birthday << "," << index << ")" << std::endl;
 }
 
-void BirthdayIndex::VertexPrint(){
+void BirthdayIndex2::VertexPrint2(){
 	int px = index & 0x01ff;
 	int py = (index >> 9) & 0x01ff;
 	int pz = (index >> 18) & 0x01ff;
@@ -82,7 +82,7 @@ void BirthdayIndex::VertexPrint(){
 	cout << "birthday : (m, z, y, x) = " << birthday << " : (" << pm << ", " << pz << ", " << py << ", " << px << ")" << endl; 
 }
 	
-bool BirthdayIndexComparator::operator()(const BirthdayIndex& o1, const BirthdayIndex& o2) const{
+bool BirthdayIndexComparator2::operator()(const BirthdayIndex2& o1, const BirthdayIndex2& o2) const{
 	if(o1.birthday == o2.birthday){
 		if(o1.index < o2.index){
 			return true;
@@ -99,7 +99,7 @@ bool BirthdayIndexComparator::operator()(const BirthdayIndex& o1, const Birthday
 }
 
  	
-bool BirthdayIndexInverseComparator::operator()(const BirthdayIndex& o1, const BirthdayIndex& o2) const{
+bool BirthdayIndexInverseComparator2::operator()(const BirthdayIndex2& o1, const BirthdayIndex2& o2) const{
 	if(o1.birthday == o2.birthday){
 		if(o1.index < o2.index){
 			return false;

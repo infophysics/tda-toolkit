@@ -32,14 +32,14 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-class ColumnsToReduce{
+class ColumnsToReduce2{
 public:
 
-	vector<BirthdayIndex> columns_to_reduce;
+	vector<BirthdayIndex2> columns_to_reduce;
 	int dim;
 	int max_of_index;
 
-	ColumnsToReduce(DenseCubicalGrids* _dcg); 
+	ColumnsToReduce2(DenseCubicalGrids2* _dcg); 
 
-	int size(); 
+	int size2(); 
 };

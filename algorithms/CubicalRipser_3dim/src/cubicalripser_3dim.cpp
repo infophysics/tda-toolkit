@@ -69,46 +69,46 @@ void CubicalRipser3D::ComputeBarcode(const char* filename, string output_filenam
 		exit(-1);
 	}
 	
-	vector<WritePairs> writepairs; // dim birth death
+	vector<WritePairs2> writepairs; // dim birth death
 	writepairs.clear();
 	
-	file_format format_type = PERSEUS;
+	file_format2 format_type = PERSEUS2;
 	if (format == "DIPHA"){
-		format_type = DIPHA;
+		format_type = DIPHA2;
 	}
 		
-	calculation_method calc_method = LINKFIND;
+	calculation_method2 calc_method = LINKFIND2;
 	if (method == "COMPUTEPAIRS"){
-		calc_method = COMPUTEPAIRS;
+		calc_method = COMPUTEPAIRS2;
 	}
 			
-	DenseCubicalGrids* dcg = new DenseCubicalGrids(filename, threshold, format_type);
-	ColumnsToReduce* ctr = new ColumnsToReduce(dcg);
+	DenseCubicalGrids2* dcg = new DenseCubicalGrids2(filename, threshold, format_type);
+	ColumnsToReduce2* ctr = new ColumnsToReduce2(dcg);
 	
 	switch(calc_method){
-		case LINKFIND:
+		case LINKFIND2:
 		{
-			JointPairs* jp = new JointPairs(dcg, ctr, writepairs, print);
-			jp -> joint_pairs_main(); // dim0
+			JointPairs2* jp = new JointPairs2(dcg, ctr, writepairs, print);
+			jp -> joint_pairs_main2(); // dim0
 
-			ComputePairs* cp = new ComputePairs(dcg, ctr, writepairs, print);
-			cp -> compute_pairs_main(); // dim1
-			cp -> assemble_columns_to_reduce();
+			ComputePairs2* cp = new ComputePairs2(dcg, ctr, writepairs, print);
+			cp -> compute_pairs_main2(); // dim1
+			cp -> assemble_columns_to_reduce2();
 			
-			cp -> compute_pairs_main(); // dim2
+			cp -> compute_pairs_main2(); // dim2
 		break;
 		}
 		
-		case COMPUTEPAIRS:
+		case COMPUTEPAIRS2:
 		{
-			ComputePairs* cp = new ComputePairs(dcg, ctr, writepairs, print);
-			cp -> compute_pairs_main(); // dim0
-			cp -> assemble_columns_to_reduce();
+			ComputePairs2* cp = new ComputePairs2(dcg, ctr, writepairs, print);
+			cp -> compute_pairs_main2(); // dim0
+			cp -> assemble_columns_to_reduce2();
 
-			cp -> compute_pairs_main(); // dim1
-			cp -> assemble_columns_to_reduce();
+			cp -> compute_pairs_main2(); // dim1
+			cp -> assemble_columns_to_reduce2();
 
-			cp -> compute_pairs_main(); // dim2
+			cp -> compute_pairs_main2(); // dim2
 		break;
 		}
 	}
@@ -126,10 +126,10 @@ void CubicalRipser3D::ComputeBarcode(const char* filename, string output_filenam
 
 		int64_t p = writepairs.size();
 		for(int64_t i = 0; i < p; ++i){
-			writing_file << writepairs[i].getDimension() << ",";
+			writing_file << writepairs[i].getDimension2() << ",";
 
-			writing_file << writepairs[i].getBirth() << ",";
-			writing_file << writepairs[i].getDeath() << endl;
+			writing_file << writepairs[i].getBirth2() << ",";
+			writing_file << writepairs[i].getDeath2() << endl;
 		}
 		writing_file.close();
 	} else {
@@ -148,13 +148,13 @@ void CubicalRipser3D::ComputeBarcode(const char* filename, string output_filenam
 		cout << "the number of pairs : " << p << endl;
 		writing_file.write((char *) &p, sizeof( int64_t )); // number of points in the diagram p
 		for(int64_t i = 0; i < p; ++i){
-			int64_t writedim = writepairs[i].getDimension();
+			int64_t writedim = writepairs[i].getDimension2();
 			writing_file.write((char *) &writedim, sizeof( int64_t )); // dim
 
-			double writebirth = writepairs[i].getBirth();
+			double writebirth = writepairs[i].getBirth2();
 			writing_file.write((char *) &writebirth, sizeof( double )); // birth
 			
-			double writedeath = writepairs[i].getDeath();
+			double writedeath = writepairs[i].getDeath2();
 			writing_file.write((char *) &writedeath, sizeof( double )); // death
 		}
 		writing_file.close();

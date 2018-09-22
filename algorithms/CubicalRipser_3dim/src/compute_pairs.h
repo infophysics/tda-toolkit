@@ -33,30 +33,30 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-template <class Key, class T> class hash_map : public std::unordered_map<Key, T> {};
+template <class Key, class T> class hash_map2 : public std::unordered_map<Key, T> {};
 
-class ComputePairs
+class ComputePairs2
 {
 public:
-	DenseCubicalGrids* dcg;
-	ColumnsToReduce* ctr;
-	hash_map<int, int> pivot_column_index;
+	DenseCubicalGrids2* dcg;
+	ColumnsToReduce2* ctr;
+	hash_map2<int, int> pivot_column_index;
 	int ax, ay, az;
 	int dim;
-	vector<WritePairs> *wp;
+	vector<WritePairs2> *wp;
 	bool print;
 
-	ComputePairs(DenseCubicalGrids* _dcg, ColumnsToReduce* _ctr, vector<WritePairs> &_wp, const bool _print);
+	ComputePairs2(DenseCubicalGrids2* _dcg, ColumnsToReduce2* _ctr, vector<WritePairs2> &_wp, const bool _print);
 
-	void compute_pairs_main();
+	void compute_pairs_main2();
 
-	void outputPP(int _dim, double _birth, double _death);
+	void outputPP2(int _dim, double _birth, double _death);
 
-	BirthdayIndex pop_pivot(priority_queue<BirthdayIndex, vector<BirthdayIndex>, BirthdayIndexComparator>&
+	BirthdayIndex2 pop_pivot2(priority_queue<BirthdayIndex2, vector<BirthdayIndex2>, BirthdayIndexComparator2>&
 		column);
 
-	BirthdayIndex get_pivot(priority_queue<BirthdayIndex, vector<BirthdayIndex>, BirthdayIndexComparator>&
+	BirthdayIndex2 get_pivot2(priority_queue<BirthdayIndex2, vector<BirthdayIndex2>, BirthdayIndexComparator2>&
 		column);
 
-	void assemble_columns_to_reduce();
+	void assemble_columns_to_reduce2();
 };

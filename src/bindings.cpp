@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include "../algorithms/CubicalRipser_2dim/src/cubicalripser_2dim.h"
+#include "../algorithms/CubicalRipser_3dim/src/cubicalripser_3dim.h"
 //#include "../algorithms/dipha/src/dipha.h"
 #include <pybind11/stl_bind.h>
 #include <pybind11/stl.h>
@@ -14,6 +15,10 @@ PYBIND11_MODULE(tda, m) {
 		.def(py::init<>())
 	  	.def("ComputeBarcode", &CubicalRipser2D::ComputeBarcode)
 		;
+  py::class_<CubicalRipser3D>(m, "CubicalRipser3D")
+		  .def(py::init<>())
+		  .def("ComputeBarcode", &CubicalRipser3D::ComputeBarcode)
+		  ;
 
   //py::class_<Dipha>(m, "Dipha")
   //		.def(py::init<>())

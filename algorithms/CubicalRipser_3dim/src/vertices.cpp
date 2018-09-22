@@ -30,15 +30,15 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "vertices.h"
 
-Vertices::Vertices(){
+Vertices2::Vertices2(){
 	dim = 0;
-	vertex = new Coeff*[8];
+	vertex = new Coeff2*[8];
 	for(int d = 0; d < 8; ++d){
-		vertex[d] = new Coeff();
+		vertex[d] = new Coeff2();
 	}
 }
 
-void Vertices::setVertices(int _dim, int _ox, int _oy, int _oz, int _om){ // 0 cell
+void Vertices2::setVertices2(int _dim, int _ox, int _oy, int _oz, int _om){ // 0 cell
 	dim = _dim;
 	ox = _ox;
 	oy = _oy;

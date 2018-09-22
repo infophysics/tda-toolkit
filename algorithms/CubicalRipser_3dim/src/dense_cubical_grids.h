@@ -34,20 +34,20 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-enum file_format { DIPHA, PERSEUS };
+enum file_format2 { DIPHA2, PERSEUS2 };
 
-class DenseCubicalGrids { // file_read
+class DenseCubicalGrids2 { // file_read
 public:
 	double threshold;
 	int dim;
 	int ax, ay, az;
 	double dense3[512][512][512];
-	file_format format;
+	file_format2 format;
 
-	DenseCubicalGrids(const std::string& filename, double _threshold, file_format _format);
+	DenseCubicalGrids2(const std::string& filename, double _threshold, file_format2 _format);
 
-	double getBirthday(int index, int dim);
+	double getBirthday2(int index, int dim);
 
-	void GetSimplexVertices(int index, int dim, Vertices* v);
+	void GetSimplexVertices2(int index, int dim, Vertices2* v);
 
 };

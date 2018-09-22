@@ -45,7 +45,7 @@ using namespace std;
 #include "compute_pairs.h"
 
 
-enum calculation_method { LINKFIND, COMPUTEPAIRS};
+enum calculation_method2 { LINKFIND2, COMPUTEPAIRS2};
 
 class CubicalRipser3D{
 	
