@@ -55,6 +55,8 @@
 #include <sstream>
 #include <unordered_map>
 
+#include "ripser.h"
+
 #ifdef USE_GOOGLE_HASHMAP
 #include <sparsehash/sparse_hash_map>
 template <class Key, class T> class hash_map : public google::sparse_hash_map<Key, T> {
@@ -65,9 +67,7 @@ public:
 template <class Key, class T> class hash_map : public std::unordered_map<Key, T> {};
 #endif
 
-typedef float value_t;
-typedef int64_t index_t;
-typedef int16_t coefficient_t;
+
 
 class binomial_coeff_table {
 	std::vector<std::vector<index_t>> B;
@@ -938,14 +938,7 @@ void ripser<sparse_distance_matrix>::assemble_columns_to_reduce(
 #endif
 }
 
-enum file_format {
-	LOWER_DISTANCE_MATRIX,
-	UPPER_DISTANCE_MATRIX,
-	DISTANCE_MATRIX,
-	POINT_CLOUD,
-	DIPHA,
-	RIPSER
-};
+
 
 template <typename T> T read(std::istream& s) {
 	T result;
@@ -1053,7 +1046,7 @@ compressed_lower_distance_matrix read_ripser(std::istream& input_stream) {
 	return compressed_lower_distance_matrix(std::move(distances));
 }
 
-compressed_lower_distance_matrix read_file(std::istream& input_stream, file_format format) {
+compressed_lower_distance_matrix read_file(std::istream& input_stream, file_format3 format) {
 	switch (format) {
 	case LOWER_DISTANCE_MATRIX:
 		return read_lower_distance_matrix(input_stream);
@@ -1063,14 +1056,14 @@ compressed_lower_distance_matrix read_file(std::istream& input_stream, file_form
 		return read_distance_matrix(input_stream);
 	case POINT_CLOUD:
 		return read_point_cloud(input_stream);
-	case DIPHA:
+	case DIPHA3:
 		return read_dipha(input_stream);
 	case RIPSER:
 		return read_ripser(input_stream);
 	}
 }
 
-void print_usage_and_exit(int exit_code) {
+void Ripser::print_usage_and_exit(int exit_code) {
 	std::cerr
 	    << "Usage: "
 	    << "ripser "
@@ -1099,71 +1092,37 @@ void print_usage_and_exit(int exit_code) {
 	exit(exit_code);
 }
 
-int main(int argc, char** argv) {
+Ripser::Ripser(){}
+Ripser::~Ripser(){}
 
-	const char* filename = nullptr;
-
-	file_format format = DISTANCE_MATRIX;
-
-	index_t dim_max = 1;
+void Ripser::ComputeBarcode(const char* filename, long dim, float thres, float rat, std::string form, long mod)
+{
+	file_format3 format = DISTANCE_MATRIX;
 	value_t threshold = std::numeric_limits<value_t>::max();
-
-	float ratio = 1;
-
-#ifdef USE_COEFFICIENTS
-	coefficient_t modulus = 2;
-#else
-	const coefficient_t modulus = 2;
-#endif
-
-	for (index_t i = 1; i < argc; ++i) {
-		const std::string arg(argv[i]);
-		if (arg == "--help") {
-			print_usage_and_exit(0);
-		} else if (arg == "--dim") {
-			std::string parameter = std::string(argv[++i]);
-			size_t next_pos;
-			dim_max = std::stol(parameter, &next_pos);
-			if (next_pos != parameter.size()) print_usage_and_exit(-1);
-		} else if (arg == "--threshold") {
-			std::string parameter = std::string(argv[++i]);
-			size_t next_pos;
-			threshold = std::stof(parameter, &next_pos);
-			if (next_pos != parameter.size()) print_usage_and_exit(-1);
-		} else if (arg == "--ratio") {
-			std::string parameter = std::string(argv[++i]);
-			size_t next_pos;
-			ratio = std::stof(parameter, &next_pos);
-			if (next_pos != parameter.size()) print_usage_and_exit(-1);
-		} else if (arg == "--format") {
-			std::string parameter = std::string(argv[++i]);
-			if (parameter == "lower-distance")
-				format = LOWER_DISTANCE_MATRIX;
-			else if (parameter == "upper-distance")
-				format = UPPER_DISTANCE_MATRIX;
-			else if (parameter == "distance")
-				format = DISTANCE_MATRIX;
-			else if (parameter == "point-cloud")
-				format = POINT_CLOUD;
-			else if (parameter == "dipha")
-				format = DIPHA;
-			else if (parameter == "ripser")
-				format = RIPSER;
-			else
-				print_usage_and_exit(-1);
-#ifdef USE_COEFFICIENTS
-		} else if (arg == "--modulus") {
-			std::string parameter = std::string(argv[++i]);
-			size_t next_pos;
-			modulus = std::stol(parameter, &next_pos);
-			if (next_pos != parameter.size() || !is_prime(modulus)) print_usage_and_exit(-1);
-#endif
-		} else {
-			if (filename) { print_usage_and_exit(-1); }
-			filename = argv[i];
-		}
+	index_t dim_max = dim;
+	if(thres != 0){
+		value_t threshold = thres;
 	}
+	float ratio = rat;
 
+	#ifdef USE_COEFFICIENTS
+		coefficient_t modulus = mod;
+	#else
+		const coefficient_t modulus = mod;
+	#endif
+		if (form == "lower-distance")
+			format = LOWER_DISTANCE_MATRIX;
+		else if (form == "upper-distance")
+			format = UPPER_DISTANCE_MATRIX;
+		else if (form == "distance")
+			format = DISTANCE_MATRIX;
+		else if (form == "point-cloud")
+			format = POINT_CLOUD;
+		else if (form == "dipha")
+			format = DIPHA3;
+		else if (form == "ripser")
+			format = RIPSER;
+		
 	std::ifstream file_stream(filename);
 	if (filename && file_stream.fail()) {
 		std::cerr << "couldn't open file " << filename << std::endl;

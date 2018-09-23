@@ -3,6 +3,7 @@
 #include "../algorithms/CubicalRipser_3dim/src/cubicalripser_3dim.h"
 //#include "../algorithms/dipha/src/dipha.h"
 #include "../algorithms/Perseus/Perseus.h"
+#include "../algorithms/Ripser/ripser.h"
 #include <pybind11/stl_bind.h>
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
@@ -25,6 +26,10 @@ PYBIND11_MODULE(tda, m) {
 		  .def("ComputeBarcode", &Perseus::ComputeBarcode)
 		  ;
 
+  py::class_<Ripser>(m, "Ripser")
+		  .def(py::init<>())
+		  .def("ComputeBarcode", &Ripser::ComputeBarcode)
+		  ;
   //py::class_<Dipha>(m, "Dipha")
   //		.def(py::init<>())
   //		.def("compute", &Dipha::compute)
