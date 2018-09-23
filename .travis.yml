@@ -1,0 +1,62 @@
+# This file arranges for the build server for tests and automatic
+# deployment to PyPI such that we can pip install.
+
+notifications:
+  email: false
+
+language: generic  # This needs to be set for OSX support
+
+# Deploy releases to PyPI for pip installs
+# See https://docs.travis-ci.com/user/encryption-keys/
+env:
+  global:
+    - TWINE_USERNAME=infophysics
+    - secure: "suTSEHAh91q1XUWuX7nVkcY0pIoD+EQBj21IVSysj7kirOs5my1oWeXTS29Rh+Bzf3ge8yGhxYKXcgFp/nbCKWkNIK+3rBvYekvvYZ9UZ42ow/BQZlSDNuLM/Vu2OndcnIR4xNiPAOrjYKITQP+IetDVm3dwRS33GTLlO+F6+2xtwecD6UGhEUhJOJPuqxqf4DnbRyf/pzBgOt3tfAAt5eUCv6GP9gWD/3B1o7U9ZqW01927+7QJfEfSdahvLB7if3BUp8YIxwbRULxmyxtjltjfMU8yj42q1lzNRMLvVPaQ15HNUs41EVvK2OJ9mUN7v+/Gwh5Iy8hBdhq+BfRlu7hLLr5SMpamAAFVzxU1R489BF3G2DiTZlwdAPCTBcH16sQPazEBmZGI3Wowqs5IQ0F6gy0Tp40/dMQPTBM/+kbl/V2jI/4nIUu9MussrXbskahHl196hsEH9NwDJnKMwNiv8BGIqUqgTe/hQs27Um7HuHdHRtWr8Vb3NAyEYjv3/icz+0V5bPs37PBIddzXmQQemgWXcM3iklqftuxNSLHL2t/vrC80GK0TEqCYla8frjsjV0KytWHo0Ovu8clN0DWBeaAUKOOZrvFMg2lV3sjvRUG7UWKgDdTh092DqZJXzfY2JIHXTcxCRmXpCnhxHhSurLCdzgAnwqAbKv3JaX8="
+    
+matrix:
+  include:
+  - sudo: required
+    services:
+      - docker
+    env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+    language: python
+  - sudo: required
+    services:
+      - docker
+    env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686 PRE_CMD=linux32
+    language: python
+  - os: osx
+    osx_image: xcode6.4
+    env: PYTHON=2.7
+  - os: osx
+    osx_image: xcode6.4
+    env: PYTHON=3.4
+  - os: osx
+    osx_image: xcode6.4
+    env: PYTHON=3.5
+  - os: osx
+    osx_image: xcode6.4
+    env: PYTHON=3.6
+  - os: osx
+    osx_image: xcode6.4
+    env: PYTHON=3.7
+    
+before_install:
+    - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then source travis/setup-osx.sh; fi
+
+install:
+    - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then docker pull $DOCKER_IMAGE; fi
+    - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then pip install wheel; fi
+    
+
+script:
+    - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then docker run --rm -v `pwd`:/io $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh; fi
+    - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then python setup.py test; fi
+    - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then python setup.py bdist_wheel; fi
+    - if [ "${PYTHON}" == "3.7" ]; then python setup.py sdist ; fi
+
+after_success:
+    - pip install twine
+    - echo TRAVIS_TAG $TRAVIS_TAG
+    - if [ ! -z "$TRAVIS_TAG" ] && [ "${TRAVIS_OS_NAME}" == "linux" ]; then python -m twine upload wheelhouse/*.whl; fi
+- if [ ! -z "$TRAVIS_TAG" ] && [ "${TRAVIS_OS_NAME}" == "osx" ]; then python -m twine upload dist/*; fi

@@ -78,4 +78,23 @@ setup(
     ext_modules=[CMakeExtension('tda/tda')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
+    include_package_data=True,
+    project_urls={
+        'TDA source': 'https://github.com/infophysics/TDA'
+    },
+    classifiers = [
+        'Development Status :: 4 - Beta',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: C++',
+        'Intended Audience :: Science/Research',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Topic :: Scientific/Engineering',
+        'Operating System :: OS Independent',
+    ]
 )
