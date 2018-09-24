@@ -41,6 +41,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "write_pairs.h"
 #include "union_find.h"
 #include "compute_pairs.h"
+#include "../../../src/Barcode.h"
 
 using namespace std;
 
@@ -48,11 +49,16 @@ enum calculation_method { LINKFIND, COMPUTEPAIRS};
 
 class CubicalRipser2D{
 	
+	private:
+		Barcode m_Barcode;
 	public:
 		CubicalRipser2D();
 		virtual ~CubicalRipser2D();
 		void print_usage_and_exit(int exit_code);
-		void ComputeBarcode(const char* filename, string output_filename, string format, string method, double threshold, bool print);	
+		void ComputeBarcode(const char* filename, string output_filename, string format, string method, double threshold, bool print);			
+
+		Barcode getBarcode(){return m_Barcode;}	
 };
+
 
 

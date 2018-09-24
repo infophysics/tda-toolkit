@@ -16,6 +16,7 @@ PYBIND11_MODULE(tda, m) {
   py::class_<CubicalRipser2D>(m, "CubicalRipser2D")
 		.def(py::init<>())
 	  	.def("ComputeBarcode", &CubicalRipser2D::ComputeBarcode)
+		.def("getBarcode", &CubicalRipser2D::getBarcode)
 		;
   py::class_<CubicalRipser3D>(m, "CubicalRipser3D")
 		  .def(py::init<>())

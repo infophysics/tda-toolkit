@@ -106,6 +106,13 @@ void CubicalRipser2D::ComputeBarcode(const char* filename, string output_filenam
 			break;
 			}
 		}
+		//	Save barcode
+		int64_t p = writepairs.size();
+		for(int64_t i = 0; i < p; ++i){
+			std::vector<double> x = {writepairs[i].getDimension(), writepairs[i].getBirth(), writepairs[i].getDeath()};
+			m_Barcode.push_back(x);
+		}
+		
 		ofstream writing_file;
 
 			string extension = ".csv";
@@ -117,7 +124,7 @@ void CubicalRipser2D::ComputeBarcode(const char* filename, string output_filenam
 					cout << " error: open file for output failed! " << endl;
 				}
 
-				int64_t p = writepairs.size();
+				
 				for(int64_t i = 0; i < p; ++i){
 					writing_file << writepairs[i].getDimension() << ",";
 

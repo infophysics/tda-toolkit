@@ -100,28 +100,35 @@ def save_binary_cells_to_point_cloud(input_array, output_file):
 '''
 
 
-def plot_persistence_diagram(life_death_array):
+def plot_persistence_diagram(barcode):
 
-    birth_times = [life_death_array[i][0] for i in range(len(life_death_array))]
-    death_times = [life_death_array[i][1] for i in range(len(life_death_array))]
+    dims = [barcode[i][0] for i in range(len(barcode))]
+    #  find unique dimensions    
+    unique_dims = []
+    for dim in dims:
+        if dim not in unique_dims:
+            unique_dims.append(dim)
+    fig, axs = plt.subplots(1, len(unique_dims), figsize=(15,5))
+    for j in range(len(unique_dims)):
+        birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+        death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
 
-    max_birth = np.max(birth_times)
-    max_death = np.max(death_times)
-    max_both = max(max_birth, max_death)
-    y = np.linspace(0, max_both, 2)
+        max_birth = np.max(birth_times)
+        max_death = np.max(death_times)
+        max_both = max(max_birth, max_death)
+        y = np.linspace(0, max_both, 2)
 
-    plt.figure()
-    plt.plot(y, y, color='g')
-    plt.scatter(birth_times, death_times, color='b')
-    plt.xlabel('Birth Time')
-    plt.ylabel('Death Time')
-    plt.title('Persistence Diagram')
-    plt.grid(True)
+        axs[j].plot(y, y, color='g')
+        axs[j].scatter(birth_times, death_times, color='b')
+        axs[j].set_xlabel('Birth Time')
+        axs[j].set_ylabel('Death Time')
+        axs[j].set_title('Persistence Diagram for dim %s' % j)
+        axs[j].grid(True)
     plt.show()
 
 
 def plot_persistence_diagram_from_file(life_death_file):
 
     df = pd.read_csv(life_death_file, header=None)
-    persist = [[df.values[i][1],df.values[i][2]] for i in range(len(df.values)) if df.values[i][0] != -1]
+    persist = [[df.values[i][0],df.values[i][1],df.values[i][2]] for i in range(len(df.values))]
     plot_persistence_diagram(persist)
