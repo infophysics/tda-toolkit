@@ -1,5 +1,6 @@
 from tda.tda import CubicalRipser2D, CubicalRipser3D, Perseus, Ripser
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import struct
@@ -91,3 +92,36 @@ def save_binary_cells_to_point_cloud(input_array, output_file):
     coords = np.asarray(list(zip(df[0],df[1])))
     dfOut = pd.DataFrame(coords)
     dfOut.to_csv(output_file, index=False, header=False)
+
+
+'''
+    Persistent Homology 
+
+'''
+
+
+def plot_persistence_diagram(life_death_array):
+
+    birth_times = [life_death_array[i][0] for i in range(len(life_death_array))]
+    death_times = [life_death_array[i][1] for i in range(len(life_death_array))]
+
+    max_birth = np.max(birth_times)
+    max_death = np.max(death_times)
+    max_both = max(max_birth, max_death)
+    y = np.linspace(0, max_both, 2)
+
+    plt.figure()
+    plt.plot(y, y, color='g')
+    plt.scatter(birth_times, death_times, color='b')
+    plt.xlabel('Birth Time')
+    plt.ylabel('Death Time')
+    plt.title('Persistence Diagram')
+    plt.grid(True)
+    plt.show()
+
+
+def plot_persistence_diagram_from_file(life_death_file):
+
+    df = pd.read_csv(life_death_file, header=None)
+    persist = [[df.values[i][1],df.values[i][2]] for i in range(len(df.values)) if df.values[i][0] != -1]
+    plot_persistence_diagram(persist)
