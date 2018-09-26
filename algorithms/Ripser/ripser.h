@@ -56,11 +56,16 @@ enum file_format3 {
 };
 
 class Ripser{
+	private:
+		std::vector<std::vector<float> > m_barcode;
 	public:
 		Ripser();
 		virtual ~Ripser();
 		void print_usage_and_exit(int exit_code);
 		void ComputeBarcode(const char* filename, long dim, float thres, float rat, std::string form, long mod);
+		
+		std::vector<std::vector<float> > getBarcode(){ return m_barcode; }
+		void saveBarcodeToFile(std::string output_file);
 };
 
 

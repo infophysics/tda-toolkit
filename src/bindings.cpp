@@ -30,6 +30,8 @@ PYBIND11_MODULE(tda, m) {
   py::class_<Ripser>(m, "Ripser")
 		  .def(py::init<>())
 		  .def("ComputeBarcode", &Ripser::ComputeBarcode)
+		  .def("getBarcode", &Ripser::getBarcode)
+		  .def("saveBarcodeToFile", &Ripser::saveBarcodeToFile)
 		  ;
   //py::class_<Dipha>(m, "Dipha")
   //		.def(py::init<>())

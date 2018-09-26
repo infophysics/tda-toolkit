@@ -57,6 +57,8 @@
 
 #include "ripser.h"
 
+std::vector<std::vector<float> > m_Barcode;
+
 #ifdef USE_GOOGLE_HASHMAP
 #include <sparsehash/sparse_hash_map>
 template <class Key, class T> class hash_map : public google::sparse_hash_map<Key, T> {
@@ -484,6 +486,8 @@ public:
 			index_t u = dset.find(vertices_of_edge[0]), v = dset.find(vertices_of_edge[1]);
 
 			if (u != v) {
+				std::vector<float> barcode = {0, 0, get_diameter(e)};
+				m_Barcode.push_back(barcode);
 #ifdef PRINT_PERSISTENCE_PAIRS
 				if (get_diameter(e) != 0)
 					std::cout << " [0," << get_diameter(e) << ")" << std::endl;
@@ -493,10 +497,16 @@ public:
 				columns_to_reduce.push_back(e);
 		}
 		std::reverse(columns_to_reduce.begin(), columns_to_reduce.end());
-
+		for (index_t i = 0; i < n; ++i)
+					if (dset.find(i) == i){
+						std::vector<float> barcode = {0,0,threshold};
+						m_Barcode.push_back(barcode);
+					}
 #ifdef PRINT_PERSISTENCE_PAIRS
 		for (index_t i = 0; i < n; ++i)
-			if (dset.find(i) == i) std::cout << " [0, )" << std::endl << std::flush;
+			if (dset.find(i) == i){
+				std::cout << " [0, )" << std::endl << std::flush;
+			}
 #endif
 	}
 
@@ -609,9 +619,11 @@ public:
 #ifdef PRINT_PERSISTENCE_PAIRS
 						value_t death = get_diameter(pivot);
 						if (death > diameter * ratio) {
+						std::vector<float> barcode = {dim, diameter, death};
+						m_Barcode.push_back(barcode);
 #ifdef INDICATE_PROGRESS
 							std::cout << "\033[K";
-#endif
+#endif	
 							std::cout << " [" << diameter << "," << death << ")" << std::endl
 							          << std::flush;
 						}
@@ -652,6 +664,8 @@ public:
 						break;
 					}
 				} else {
+					std::vector<float> barcode = {dim, diameter, threshold};
+					m_Barcode.push_back(barcode);
 #ifdef PRINT_PERSISTENCE_PAIRS
 					std::cout << " [" << diameter << ", )" << std::endl << std::flush;
 #endif
@@ -1097,6 +1111,8 @@ Ripser::~Ripser(){}
 
 void Ripser::ComputeBarcode(const char* filename, long dim, float thres, float rat, std::string form, long mod)
 {
+	//	Clear the barcode vector
+	m_Barcode.clear();
 	file_format3 format = DISTANCE_MATRIX;
 	value_t threshold = std::numeric_limits<value_t>::max();
 	index_t dim_max = dim;
@@ -1168,4 +1184,21 @@ void Ripser::ComputeBarcode(const char* filename, long dim, float thres, float r
 		                               threshold, ratio, modulus)
 		    .compute_barcodes();
 	}
+	m_barcode = m_Barcode;
+}
+
+void Ripser::saveBarcodeToFile(std::string output_file){
+	std::ofstream writing_file;
+	writing_file.open(output_file, std::ios::out);
+
+	if(!writing_file.is_open()){
+		std::cout << "ERROR! Could not open file! " << std::endl;
+	}	
+	for(int64_t i = 0; i < m_barcode.size(); ++i){
+		writing_file << m_barcode[i][0] << ",";
+
+		writing_file << m_barcode[i][1] << ",";
+		writing_file << m_barcode[i][2] << std::endl;
+	}
+	writing_file.close();
 }
