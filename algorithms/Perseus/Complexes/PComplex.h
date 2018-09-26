@@ -69,6 +69,7 @@ public:
 	void destroyPersData();
 	void REMOVE_PIVOT_ROW(const PCell<C,BT>*, PCCHAIN&, bool);
 	void COMPUTE_INTERVALS(const Complex<C,BT>&, bool, bool);
+	std::vector<std::vector<float> > getBarcode();
 
 };
 

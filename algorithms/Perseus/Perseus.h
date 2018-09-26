@@ -23,6 +23,8 @@ typedef int CC;
 using namespace std;
 
 class Perseus{
+	private:
+		PComplex<CC,BC> complex;
 	
 	public:
 		Perseus();
@@ -56,5 +58,6 @@ class Perseus{
 		
 		//	Compute barcode
 		void ComputeBarcode(string input_type, string infile, string outfile, string eng);
+		std::vector<std::vector<float> > getBarcode();
 	
 };

@@ -136,8 +136,8 @@ void Filter2D::filterBinaryVonNeumann(int threshold){	//	only hard boundary righ
 	bool thres = true;
 	int currentState = 1;
 	//	loop
+	vector<vector<int> > binaryCopy = m_Binary;
 	while(deadCells > 0 || thres == false){
-		vector<vector<int> > binaryCopy = m_Binary;
 		for (int i = 0; i < binaryCopy.size(); i++){
 			for (int j = 0; j < binaryCopy[i].size(); j++){
 				//	Check state

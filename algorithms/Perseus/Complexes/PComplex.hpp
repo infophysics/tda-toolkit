@@ -280,3 +280,37 @@ bool PComplex<C,BT>::makeOutputFiles(const string& filename)
 	return true;
 }
 
+template <typename C, typename BT>
+std::vector<std::vector<float> > PComplex<C,BT>::getBarcode()
+{
+	std::vector<std::vector<float> > barcode;
+	
+	int dimst; // string representation for dimension
+	int birth;
+	int death;
+	// first we make interval files for each dimension
+	typename INT_STR::const_iterator it;
+	INTVEC* curints;
+	typename INTVEC::const_iterator iit;
+	for(it = ints.begin(); it != ints.end(); ++it)
+	{
+		
+		dimst = it->first;
+		curints = it->second;
+		//int k = 0;
+		for (iit = curints->begin(); iit!=curints->end(); ++iit)
+		{
+			
+			//std::cout << "HERE:" << (dimst) << "\t" << (iit->first) << "\t" << (iit->second) << std::endl;
+			birth = iit->first;
+			death = iit->second;
+			if (death == -1) death = 99999;
+			//std::cout << "Iter: " << k << ", " << dimst << "\t" << birth << "\t" << death << std::endl;
+			std::vector<float> temp_barcode = {float(dimst), float(birth), float(death)};
+			//std::cout << dimst << "\t" << iit->first << "\t" << iit->second << std::endl;
+			barcode.push_back(temp_barcode);
+			//k++;
+		}
+	}
+	return barcode;
+}

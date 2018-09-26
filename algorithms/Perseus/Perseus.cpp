@@ -20,6 +20,7 @@ Perseus::~Perseus(){}
 // cubtop, scubtop, rips, brips, brips_comrad, simtop, nmfsimtop, movie
 void Perseus::ComputeBarcode(string input_type, string infile, string outfile, string eng)
 {
+	
 	bool savegens = false; // store generator chains
 	bool truncate = false; // ignore boundary-less cells of top dimension when
 		                   // computing persistence: for rips complexes only.
@@ -479,17 +480,22 @@ void Perseus::ComputeBarcode(string input_type, string infile, string outfile, s
 	PComplex<CC,BC> pcomp;
 	if (FLOWTALK) cout<<"\nComputing Persistence Intervals!";
 	if (MAKEBPS) {cout<<"... ";    cin.get(); }
-	pcomp.COMPUTE_INTERVALS(*ccomp, savegens, truncate);
+	complex.COMPUTE_INTERVALS(*ccomp, savegens, truncate);
 
 	//ccomp.showInts();
-	pcomp.makeOutputFiles(outfile);
+	complex.makeOutputFiles(outfile);
     //pcomp.showBetti();
-
-	delete ccomp;
+	//complex = pcomp;
+	
+	//delete ccomp;
 	//delete ccomp;
 
 	if (FLOWTALK) cout<<"\n\nDone!!! Please consult ["<<outfile<<"*.txt] for results.\n\n";
 	return;
+}
+
+std::vector<std::vector<float> > Perseus::getBarcode(){
+	return complex.getBarcode();
 }
 
 // subroutine to construct cell complex from dense cubical toplex information. The text

@@ -107,47 +107,63 @@ def plot_persistence_diagram(barcode, split=True):
     for dim in dims:
         if dim not in unique_dims:
             unique_dims.append(dim)
-    #   Plot persistence diagrams for each degree separately
-    if split:
-        fig, axs = plt.subplots(1, len(unique_dims), figsize=(15, 5))
-        for j in range(len(unique_dims)):
-            birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
-            death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
-
-            max_birth = np.max(birth_times)
-            max_death = np.max(death_times)
-            max_both = max(max_birth, max_death)
-            y = np.linspace(0, max_both, 2)
-
-            axs[j].plot(y, y, color='g')
-            axs[j].scatter(birth_times, death_times, color='b')
-            axs[j].set_xlabel('Birth Time')
-            axs[j].set_ylabel('Death Time')
-            axs[j].set_title('Persistence Diagram for degree %s' % j)
-            axs[j].grid(True)
-    #   Or together
-    else:
+    if len(unique_dims) == 1:
         fig, axs = plt.subplots(1)
         max_val = np.max(barcode[:][:])
         y = np.linspace(0, max_val, 2)
 
-        axs.plot(y, y, color='g')
+        axs.plot(y, y, color='g', linestyle='--')
         for j in range(len(unique_dims)):
             birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
             death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
         axs.scatter(birth_times, death_times)
         axs.set_xlabel('Birth Time')
         axs.set_ylabel('Death Time')
-        axs.set_title('Persistence Diagram')
+        axs.set_title('Persistence Diagram for degree $H_%s$' % 0)
         axs.grid(True)
+    else:
+        #   Plot persistence diagrams for each degree separately
+        if split:
+            fig, axs = plt.subplots(1, len(unique_dims), figsize=(15, 5))
+            for j in range(len(unique_dims)):
+                birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+                death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+
+                max_birth = np.max(birth_times)
+                max_death = np.max(death_times)
+                max_both = max(max_birth, max_death)
+                y = np.linspace(0, max_both, 2)
+
+                axs[j].plot(y, y, color='g', linestyle='--')
+                axs[j].scatter(birth_times, death_times, color='b')
+                axs[j].set_xlabel('Birth Time')
+                axs[j].set_ylabel('Death Time')
+                axs[j].set_title('Persistence Diagram for degree $H_%s$' % j)
+                axs[j].grid(True)
+        #   Or together
+        else:
+            fig, axs = plt.subplots(1, figsize=(15,10))
+            max_val = np.max(barcode[:][:])
+            y = np.linspace(0, max_val, 2)
+
+            axs.plot(y, y, color='g', linestyle='--')
+            for j in range(len(unique_dims)):
+                birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+                death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+                axs.scatter(birth_times, death_times, label='$H_%s$' % j)
+            axs.set_xlabel('Birth Time')
+            axs.set_ylabel('Death Time')
+            axs.legend()
+            axs.set_title('Persistence Diagram')
+            axs.grid(True)
 
     plt.show()
 
 
-def plot_persistence_diagram_from_file(life_death_file):
+def plot_persistence_diagram_from_file(life_death_file, split=True):
     df = pd.read_csv(life_death_file, header=None)
     persist = [[df.values[i][0], df.values[i][1], df.values[i][2]] for i in range(len(df.values))]
-    plot_persistence_diagram(persist)
+    plot_persistence_diagram(persist, split=split)
 
 
 def plot_barcode_diagram(barcode):
@@ -158,23 +174,42 @@ def plot_barcode_diagram(barcode):
         if dim not in unique_dims:
             unique_dims.append(dim)
     fig, axs = plt.subplots(1, len(unique_dims), figsize=(15, 5))
-    for j in range(len(unique_dims)):
-        birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
-        death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+    if len(unique_dims) == 1:
+        for j in range(len(unique_dims)):
+            birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+            death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
 
-        max_birth = np.max(birth_times)
-        max_death = np.max(death_times)
-        min_birth = np.min(birth_times)
-        max_both = max(max_birth, max_death)
-        scale = 1.0 / max_death
-        for k in range(len(birth_times)):
-            axs[j].plot([birth_times[k], death_times[k]], [(k + 1), (k + 1)], color='b', linewidth=10)
-        axs[j].set_xlabel('Time')
-        axs[j].set_ylabel('Component')
-        axs[j].set_ylim(0, len(birth_times) + 1)
-        axs[j].set_yticks([])
-        axs[j].set_title('Barcode Diagram for degree %s' % j)
-        axs[j].grid(True)
+            max_birth = np.max(birth_times)
+            max_death = np.max(death_times)
+            min_birth = np.min(birth_times)
+            max_both = max(max_birth, max_death)
+            scale = 1.0 / max_death
+            for k in range(len(birth_times)):
+                axs.plot([birth_times[k], death_times[k]], [(k + 1), (k + 1)], color='b', linewidth=10)
+            axs.set_xlabel('Time')
+            axs.set_ylabel('Component')
+            axs.set_ylim(0, len(birth_times) + 1)
+            axs.set_yticks([])
+            axs.set_title('Barcode Diagram for degree $H_%s$' % 0)
+            axs.grid(True)
+    else:
+        for j in range(len(unique_dims)):
+            birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+            death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+
+            max_birth = np.max(birth_times)
+            max_death = np.max(death_times)
+            min_birth = np.min(birth_times)
+            max_both = max(max_birth, max_death)
+            scale = 1.0 / max_death
+            for k in range(len(birth_times)):
+                axs[j].plot([birth_times[k], death_times[k]], [(k + 1), (k + 1)], color='b', linewidth=10)
+            axs[j].set_xlabel('Time')
+            axs[j].set_ylabel('Component')
+            axs[j].set_ylim(0, len(birth_times) + 1)
+            axs[j].set_yticks([])
+            axs[j].set_title('Barcode Diagram for degree $H_%s$' % j)
+            axs[j].grid(True)
 
     plt.show()
 

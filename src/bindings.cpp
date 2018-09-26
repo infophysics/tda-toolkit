@@ -25,6 +25,7 @@ PYBIND11_MODULE(tda, m) {
   py::class_<Perseus>(m, "Perseus")
 		  .def(py::init<>())
 		  .def("ComputeBarcode", &Perseus::ComputeBarcode)
+		  .def("getBarcode", &Perseus::getBarcode)
 		  ;
 
   py::class_<Ripser>(m, "Ripser")
