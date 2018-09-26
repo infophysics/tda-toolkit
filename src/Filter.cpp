@@ -8,113 +8,43 @@ using namespace std;
 Filter2D::Filter2D(){}
 Filter2D::~Filter2D(){}
 
-void Filter2D::loadBinaryFromFile(const char* input_file, std::string format){
-	
-	if(format == "DIPHA" || format == "dipha"){ 
-		ifstream reading_file; 
-		if (input_file && file_stream.fail()) {
-			cerr << "ERROR! Could not open file " << filename << std::endl;
-			return;
-		}
-		ifstream fin( filename, ios::in | ios::binary ); 
-		int64_t d; double ax; double ay;
-		fin.read( ( char * ) &d, sizeof( int64_t ) ); // magic number
-		assert(d == 8067171840);
-		fin.read( ( char * ) &d, sizeof( int64_t ) ); // type number
-		assert(d == 1);
-		fin.read( ( char * ) &d, sizeof( int64_t ) ); //data num
-		fin.read( ( char * ) &d, sizeof( int64_t ) ); // dim
-		assert(d == 2);
-		fin.read( ( char * ) &d, sizeof( int64_t ) );
-		ax = d;
-		fin.read( ( char * ) &d, sizeof( int64_t ) );
-		ay = d;
-		assert(0 < ax && 0 < ay);
-	
-		double dense[ax][ay];
-		double dou;
-		for (int y = 0; y < ay + 2; ++y) {
-			for (int x = 0; x < ax + 2; ++x) {
-				if(0 < x && x <= ax && 0 < y && y <= ay){
-					if (!fin.eof()) {
-						fin.read( ( char * ) &dou, sizeof( double ) );
-						dense[x][y] = dou;
-					} else {
-						cout << "ERROR! End of file!" << endl;
-					}
-				}
-				else {
-					dense[x][y] = threshold;
-				}
-			}
-		}
-		fin.close();
-		for (int x = 0; x < ax; x++){
-			vector<int> points;
-			for (int y = 0; y < ay; y++){
-				points.push_back(dense[x][y]);
-			}
-			m_Binary.push_back(points);
-		}
-	}  else if(format == "PERSEUS" || format == "perseus"){
-		ifstream reading_file; 
-		reading_file.open(filename.c_str(), ios::in);
-		int64_t d; double ax; double ay;
-		string reading_line_buffer; 
-		getline(reading_file, reading_line_buffer); 
-		d = atoi(reading_line_buffer.c_str()); 
-		getline(reading_file, reading_line_buffer); 
-		ax = atoi(reading_line_buffer.c_str()); 
-		getline(reading_file, reading_line_buffer); 
-		ay = atoi(reading_line_buffer.c_str()); 
-		assert(0 < ax && 0 < ay);
-		double dense[ax][ay];
-		for (int y = 0; y <ay + 2; ++y) { 
-			for (int x = 0; x < ax + 2; ++x) { 
-				if(0 < x && x <= ax && 0 < y && y <= ay){ 
-					if (!reading_file.eof()) { 
-						getline(reading_file, reading_line_buffer); 
-						dense[x][y] = atoi(reading_line_buffer.c_str()); 
-						if (dense[x][y] == -1) { 
-							dense[x][y] = 99999;
-						} 
-					} 
-				} 
-				else { 
-					dense[x][y] = 99999; 
-				} 
-			} 
-		}
-		for (int x = 0; x < ax; x++){
-			vector<int> points;
-			for (int y = 0; y < ay; y++){
-				points.push_back(dense[x][y]);
-			}
-			m_Binary.push_back(points);
-		}
-	} 
-	else{
-		ifstream file(input_file);
-	 
-		vector<vector<string> > feed;
-	 
-		string line = "";
-		while (getline(file, line))
-		{
-			vector<string> vec;
-			boost::algorithm::split(vec, line, boost::is_any_of(delimeter));
-			feed.push_back(vec);
-		}
-		for (int x = 0; x < feed.size(); x++){
-			vector<int> points;
-			for (int y = 0; y < feed[x].size(); y++){
-				points.push_back(feed[x][y]);
-			}
-			m_Binary.push_back(points);
-		}
-	}
+void Filter2D::loadBinaryFromFile(const char* input_file){
+		std::ifstream inputFile(input_file);
+		int l = 0;
+		 
+		while (inputFile) {
+			l++;
+			std::string s;
+			if (!std::getline(inputFile, s)) break;
+		        if (s[0] != '#') {
+		            std::istringstream ss(s);
+		            std::vector<int> record;
+		 
+		            while (ss) {
+		                std::string line;
+		                if (!std::getline(ss, line, ','))
+		                    break;
+		                try {
+		                    record.push_back(stoi(line));
+		                }
+		                catch (const std::invalid_argument e) {
+		                    std::cout << "NaN found in file " << input_file << " line " << l
+		                         << std::endl;
+		                    e.what();
+		                }
+		            }
+		 
+		            m_Binary.push_back(record);
+		       }
+		   }
+		 
+		   if (!inputFile.eof()) {
+		       std::cerr << "Could not read file " << input_file << "\n";
+		       std::__throw_invalid_argument("File not found.");
+		   }
+		
 }
-void Filter2D::loadContinuousFromFile(const char* input_file, std::string format){
+void Filter2D::loadContinuousFromFile(const char* input_file){
 
 }
 
@@ -132,6 +62,7 @@ void Filter2D::countDeadCells(){
 //	Binary filterings
 void Filter2D::filterBinaryVonNeumann(int threshold){	//	only hard boundary right now
 	//	count the number of dead cells
+	countDeadCells();
 	int deadCells = m_DeadCells;
 	bool thres = true;
 	int currentState = 1;
@@ -194,6 +125,7 @@ void Filter2D::filterBinaryVonNeumann(int threshold){	//	only hard boundary righ
 				}
 			}
 		}
+		currentState++;
 		if (currentState >= threshold) thres = false;
 	}
 	m_Binary = binaryCopy;
@@ -202,4 +134,19 @@ void Filter2D::filterBinaryMoore(int threshold){
 	
 }
 
+void Filter2D::saveBinaryFiltration(const char* output_file){
+	std::ofstream myfile;
+		myfile.open(output_file);
+		for (int i = 0; i < m_Binary.size(); i++){
+			for (int j = 0; j < m_Binary[i].size(); j++){
+				myfile << m_Binary[i][j];
+				if (j < m_Binary[i].size() - 1){
+					myfile << ",";
+				}
+			}
+			myfile << "\n";
+		}
+		myfile.close();
+	
+}
 

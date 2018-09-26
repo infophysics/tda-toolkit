@@ -10,8 +10,8 @@
 #include <array>
 #include <unordered_map>
 #include <string>
+#include <sstream>
 #include <cstdint>
-#include <boost/algorithm/string.hpp>
 
 class Filter2D{
 	
@@ -23,11 +23,14 @@ class Filter2D{
 	public:
 		Filter2D();
 		virtual ~Filter2D();
-		void loadBinaryFromFile(const char* input_file, std::string format);
-		void loadContinuousFromFile(const char* input_file, std::string format);
-		
+		void loadBinaryFromFile(const char* input_file);
+		void loadContinuousFromFile(const char* input_file);
+		void countDeadCells();
 		//	Various filterings
 		//	Binary filterings
 		void filterBinaryVonNeumann(int threshold);
 		void filterBinaryMoore(int threshold);
+		
+		//	Save filtration
+		void saveBinaryFiltration(const char* output_file);
 };

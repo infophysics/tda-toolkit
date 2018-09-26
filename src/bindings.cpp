@@ -4,6 +4,7 @@
 //#include "../algorithms/dipha/src/dipha.h"
 #include "../algorithms/Perseus/Perseus.h"
 #include "../algorithms/Ripser/ripser.h"
+#include "Filter.h"
 #include <pybind11/stl_bind.h>
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
@@ -34,6 +35,16 @@ PYBIND11_MODULE(tda, m) {
 		  .def("getBarcode", &Ripser::getBarcode)
 		  .def("saveBarcodeToFile", &Ripser::saveBarcodeToFile)
 		  ;
+  
+  py::class_<Filter2D>(m, "Filter2D")
+		  .def(py::init<>())
+		  .def("loadBinaryFromFile", &Filter2D::loadBinaryFromFile)
+		  //	Various filterings
+		  //	Binary filterings
+		  .def("filterBinaryVonNeumann", &Filter2D::filterBinaryVonNeumann)
+		  //	Save filtration
+		  .def("saveBinaryFiltration", &Filter2D::saveBinaryFiltration)
+  	  	  ;
   //py::class_<Dipha>(m, "Dipha")
   //		.def(py::init<>())
   //		.def("compute", &Dipha::compute)
