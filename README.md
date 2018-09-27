@@ -38,7 +38,32 @@ Requirements: You must have CMake>=2.8.12 and a C++11 compatible compiler (GCC>=
 ```
 ## Implementation
 ```
+    grid = [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]]
+    with open("square.csv", 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerows(grid)
+    #   try 2D von neumann filter
+    filt = Filter2D()
+    filt.loadBinaryFromFile("square.csv")
+    filt.filterBinaryVonNeumann(10)
+    filt.saveBinaryFiltration("square2.csv")
+    cube2D = CubicalRipser2D()
+    convert_csv_to_dipha("square2.csv", "square_dipha.csv")
+    cube2D.ComputeBarcode("square_dipha.csv", "test.csv", "DIPHA", "LINKFIND", 10, True)
+    barcode = cube2D.getBarcode()
+    plot_persistence_diagram(barcode)
 
+    #   Now try with RIPSER directly
+    rips = Ripser()
+    # save as point cloud format
+    save_binary_cells_to_point_cloud(grid, "square_cloud.csv")
+
+    # Run ripser on this
+    rips.ComputeBarcode("square_cloud.csv", 2, 10, 1, "point-cloud", 1)
+
+    # Plot the barcode
+    barcode2 = rips.getBarcode()
+    plot_persistence_diagram(barcode2)
 ```
 
 For more examples on possible calls, please see the Jupyter Notebook example.
