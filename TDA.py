@@ -1,4 +1,4 @@
-from tda.tda import CubicalRipser2D, CubicalRipser3D, Perseus, Ripser, Filter2D
+from tda.tda import CubicalRipser2D, CubicalRipser3D, Perseus, Ripser, Filter2D, BottleneckDistance
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -292,4 +292,9 @@ if __name__ == "__main__":
     convert_csv_to_dipha("square2.csv", "square_dipha.csv")
     cube2D.ComputeBarcode("square_dipha.csv", "test.csv", "DIPHA", "LINKFIND", 10, True)
     barcode = cube2D.getBarcode()
-    plot_persistence_diagram(barcode)
+    #plot_persistence_diagram(barcode)
+
+    #   bottleneck distance test
+    bottle = BottleneckDistance()
+    distance = bottle.Distance("algorithms/bottleneck/test/test1","algorithms/bottleneck/test/test2",10)
+    print(distance)

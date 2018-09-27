@@ -4,6 +4,7 @@
 //#include "../algorithms/dipha/src/dipha.h"
 #include "../algorithms/Perseus/Perseus.h"
 #include "../algorithms/Ripser/ripser.h"
+#include "../algorithms/bottleneck/CBottleneckDistance.h"
 #include "Filter.h"
 #include <pybind11/stl_bind.h>
 #include <pybind11/stl.h>
@@ -45,6 +46,19 @@ PYBIND11_MODULE(tda, m) {
 		  //	Save filtration
 		  .def("saveBinaryFiltration", &Filter2D::saveBinaryFiltration)
   	  	  ;
+  
+  py::class_<Generator>(m, "Generator")
+		  .def(py::init<>())
+		  .def_readwrite("birth", &Generator::birth)
+		  .def_readwrite("death", &Generator::death)
+		  ;
+  
+  py::class_<CBottleneckDistance>(m, "BottleneckDistance")
+		  .def(py::init<>())
+		  .def("Distance", (double (CBottleneckDistance::*)(std::vector<Generator>,std::vector<Generator>,double)) &CBottleneckDistance::Distance)
+		  .def("Distance", (double (CBottleneckDistance::*)(const char*,const char*,double)) &CBottleneckDistance::Distance)
+		  ;
+		  
   //py::class_<Dipha>(m, "Dipha")
   //		.def(py::init<>())
   //		.def("compute", &Dipha::compute)
