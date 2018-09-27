@@ -26,6 +26,7 @@ class Filter2D{
 		void loadBinaryFromFile(const char* input_file);
 		void loadContinuousFromFile(const char* input_file);
 		void countDeadCells();
+		void printFiltration(std::vector<std::vector<int> > &binaryCopy);
 		//	Various filterings
 		//	Binary filterings
 		void filterBinaryVonNeumann(int threshold);

@@ -49,7 +49,7 @@ void Filter2D::loadContinuousFromFile(const char* input_file){
 }
 
 void Filter2D::countDeadCells(){
-	int deadCells;
+	int deadCells = 0;
 	for (int i = 0; i < m_Binary.size(); i++){
 		for (int j = 0; j < m_Binary[i].size(); j++){
 			if (m_Binary[i][j] == 0) deadCells++;
@@ -64,11 +64,11 @@ void Filter2D::filterBinaryVonNeumann(int threshold){	//	only hard boundary righ
 	//	count the number of dead cells
 	countDeadCells();
 	int deadCells = m_DeadCells;
-	bool thres = true;
+	bool thres = false;
 	int currentState = 1;
 	//	loop
 	vector<vector<int> > binaryCopy = m_Binary;
-	while(deadCells > 0 || thres == false){
+	while(deadCells > 0 && thres == false){
 		for (int i = 0; i < binaryCopy.size(); i++){
 			for (int j = 0; j < binaryCopy[i].size(); j++){
 				//	Check state
@@ -76,63 +76,159 @@ void Filter2D::filterBinaryVonNeumann(int threshold){	//	only hard boundary righ
 					//	Look at all neighbors
 					if (i == 0){
 						if (j == 0){
-							if (binaryCopy[0][1] == 0) binaryCopy[0][1] = currentState + 1; deadCells--;
-							if (binaryCopy[1][0] == 0) binaryCopy[1][0] = currentState + 1; deadCells--;
+							if (binaryCopy[0][1] == 0){
+								binaryCopy[0][1] = currentState + 1; 
+								deadCells--;
+							}
+							if (binaryCopy[1][0] == 0){
+								binaryCopy[1][0] = currentState + 1; 
+								deadCells--;
+							}
 						}
 						else if (j == binaryCopy[i].size()-1){
-							if (binaryCopy[0][j-2] == 0) binaryCopy[0][j-2] = currentState + 1;deadCells--;
-							if (binaryCopy[1][j-1] == 0) binaryCopy[1][j-1] = currentState + 1;deadCells--;
+							if (binaryCopy[0][j-1] == 0){
+								binaryCopy[0][j-1] = currentState + 1;
+								deadCells--;
+							}
+							if (binaryCopy[1][j] == 0){
+								binaryCopy[1][j] = currentState + 1;
+								deadCells--;
+							}
 						}
 						else{
-							if (binaryCopy[0][j-1] == 0) binaryCopy[0][j-1] = currentState + 1;deadCells--;
-							if (binaryCopy[0][j+1] == 0) binaryCopy[1][j+1] = currentState + 1;	deadCells--;
-							if (binaryCopy[1][j] == 0) binaryCopy[1][j] = currentState + 1;deadCells--;
+							if (binaryCopy[0][j-1] == 0){
+								binaryCopy[0][j-1] = currentState + 1;
+								deadCells--;		
+							}
+							if (binaryCopy[0][j+1] == 0){
+								binaryCopy[0][j+1] = currentState + 1;	
+								deadCells--;
+							}
+							if (binaryCopy[1][j] == 0){
+								binaryCopy[1][j] = currentState + 1;
+								deadCells--;
+							}
 						}
 					}
-					else if (i == binaryCopy[i].size() - 1){
+					else if (i == binaryCopy.size() - 1){
 						if (j == 0){
-							if (binaryCopy[i][1] == 0) binaryCopy[i][1] = currentState + 1;deadCells--;
-							if (binaryCopy[i-1][0] == 0) binaryCopy[i-1][0] = currentState + 1;deadCells--;
+							if (binaryCopy[i][1] == 0){
+								binaryCopy[i][1] = currentState + 1;
+								deadCells--;
+							}
+							if (binaryCopy[i-1][0] == 0){
+								binaryCopy[i-1][0] = currentState + 1;
+								deadCells--;
+							}
 						}
 						else if (j == binaryCopy[i].size()-1){
-							if (binaryCopy[i][j-2] == 0) binaryCopy[i][j-2] = currentState + 1;deadCells--;
-							if (binaryCopy[i-1][j-1] == 0) binaryCopy[i-1][j-1] = currentState + 1;deadCells--;
+							if (binaryCopy[i][j-1] == 0){
+								binaryCopy[i][j-1] = currentState + 1;
+								deadCells--;		
+
+							}
+							if (binaryCopy[i-1][j] == 0){
+								binaryCopy[i-1][j] = currentState + 1;
+								deadCells--;
+
+							}
 						}
 						else{
-							if (binaryCopy[i][j-1] == 0) binaryCopy[i][j-1] = currentState + 1;deadCells--;
-							if (binaryCopy[i][j+1] == 0) binaryCopy[i][j+1] = currentState + 1;deadCells--;
-							if (binaryCopy[i-1][j] == 0) binaryCopy[i-1][j] = currentState + 1;deadCells--;
+							if (binaryCopy[i][j-1] == 0){
+								binaryCopy[i][j-1] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i][j+1] == 0){
+								binaryCopy[i][j+1] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i-1][j] == 0){
+								binaryCopy[i-1][j] = currentState + 1;
+								deadCells--;
+
+							}
 						}	
 					}
 					else{
 						if (j == 0){
-							if (binaryCopy[i][1] == 0) binaryCopy[i][1] = currentState + 1;deadCells--;
-							if (binaryCopy[i-1][0] == 0) binaryCopy[i-1][0] = currentState + 1;deadCells--;
-							if (binaryCopy[i+1][0] == 0) binaryCopy[i+1][0] = currentState + 1;deadCells--;
+							if (binaryCopy[i][1] == 0){
+								binaryCopy[i][1] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i-1][0] == 0){
+								binaryCopy[i-1][0] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i+1][0] == 0){
+								binaryCopy[i+1][0] = currentState + 1;
+								deadCells--;
+
+							}
 						}
 						else if (j == binaryCopy[i].size()-1){
-							if (binaryCopy[i][j-2] == 0) binaryCopy[i][j-2] = currentState + 1;deadCells--;
-							if (binaryCopy[i-1][j-1] == 0) binaryCopy[i-1][j-1] = currentState + 1;deadCells--;
-							if (binaryCopy[i+1][j-1] == 0) binaryCopy[i+1][j-1] = currentState + 1;deadCells--;
+							if (binaryCopy[i][j-1] == 0){
+								binaryCopy[i][j-1] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i-1][j] == 0){
+								binaryCopy[i-1][j] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i+1][j] == 0){
+								binaryCopy[i+1][j] = currentState + 1;
+								deadCells--;
+
+							}
 						}
 						else{
-							if (binaryCopy[i][j-1] == 0) binaryCopy[i][j-1] = currentState + 1;deadCells--;
-							if (binaryCopy[i][j+1] == 0) binaryCopy[i][j+1] = currentState + 1;deadCells--;
-							if (binaryCopy[i-1][j] == 0) binaryCopy[i-1][j] = currentState + 1;deadCells--;
-							if (binaryCopy[i+1][j] == 0) binaryCopy[i+1][j] = currentState + 1;deadCells--;
+							if (binaryCopy[i][j-1] == 0){
+								binaryCopy[i][j-1] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i][j+1] == 0){
+								binaryCopy[i][j+1] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i-1][j] == 0){
+								binaryCopy[i-1][j] = currentState + 1;
+								deadCells--;
+
+							}
+							if (binaryCopy[i+1][j] == 0){
+								binaryCopy[i+1][j] = currentState + 1;
+								deadCells--;
+							}
 						}	
 					}
 				}
 			}
 		}
 		currentState++;
-		if (currentState >= threshold) thres = false;
+		if (currentState >= threshold) thres = true;
 	}
 	m_Binary = binaryCopy;
 }
 void Filter2D::filterBinaryMoore(int threshold){
 	
 }
+
+void Filter2D::printFiltration(std::vector<std::vector<int> > &binaryCopy){
+	for (int i = 0; i < binaryCopy.size(); i++){
+		for (int j = 0; j < binaryCopy[i].size(); j++){
+			std::cout << binaryCopy[i][j] << "\t";
+		}
+		std::cout << std::endl;
+	}
+}
+
 
 void Filter2D::saveBinaryFiltration(const char* output_file){
 	std::ofstream myfile;

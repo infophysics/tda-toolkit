@@ -279,7 +279,7 @@ def compute_2DPHD_from_file(input_file, show_plot=True, output_file=''):
 
 
 if __name__ == "__main__":
-    grid = [[1,1,1,1],[1,0,0,1],[1,0,0,1],[1,1,1,1]]
+    grid = [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]]
     with open("square.csv", 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         writer.writerows(grid)
