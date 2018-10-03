@@ -619,7 +619,7 @@ public:
 #ifdef PRINT_PERSISTENCE_PAIRS
 						value_t death = get_diameter(pivot);
 						if (death > diameter * ratio) {
-						std::vector<float> barcode = {dim, diameter, death};
+						std::vector<float> barcode = {float(dim), diameter, death};
 						m_Barcode.push_back(barcode);
 #ifdef INDICATE_PROGRESS
 							std::cout << "\033[K";
@@ -664,7 +664,7 @@ public:
 						break;
 					}
 				} else {
-					std::vector<float> barcode = {dim, diameter, threshold};
+					std::vector<float> barcode = {float(dim), diameter, threshold};
 					m_Barcode.push_back(barcode);
 #ifdef PRINT_PERSISTENCE_PAIRS
 					std::cout << " [" << diameter << ", )" << std::endl << std::flush;

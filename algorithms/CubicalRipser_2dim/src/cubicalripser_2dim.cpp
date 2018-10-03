@@ -109,7 +109,7 @@ void CubicalRipser2D::ComputeBarcode(const char* filename, string output_filenam
 		//	Save barcode
 		int64_t p = writepairs.size();
 		for(int64_t i = 0; i < p; ++i){
-			std::vector<double> x = {writepairs[i].getDimension(), writepairs[i].getBirth(), writepairs[i].getDeath()};
+			std::vector<double> x = {double(writepairs[i].getDimension()),double(writepairs[i].getBirth()), double(writepairs[i].getDeath())};
 			m_Barcode.push_back(x);
 		}
 		
