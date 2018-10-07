@@ -1,4 +1,4 @@
-from tda.tda import CubicalRipser2D, CubicalRipser3D, Perseus, Ripser, Filter2D, BottleneckDistance
+from tda.tda import CubicalRipser2D, CubicalRipser3D, Perseus, Ripser, Filter2D, BottleneckDistance, Generator
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -292,9 +292,32 @@ if __name__ == "__main__":
     convert_csv_to_dipha("square2.csv", "square_dipha.csv")
     cube2D.ComputeBarcode("square_dipha.csv", "test.csv", "DIPHA", "LINKFIND", 10, True)
     barcode = cube2D.getBarcode()
-    #plot_persistence_diagram(barcode)
+    plot_persistence_diagram(barcode)
+
+    #   Now try with RIPSER directly
+    rips = Ripser()
+    # save as point cloud format
+    save_binary_cells_to_point_cloud(grid, "square_cloud.csv")
+
+    # Run ripser on this
+    rips.ComputeBarcode("square_cloud.csv", 2, 10, 1, "point-cloud", 1)
+
+    # Plot the barcode
+    barcode2 = rips.getBarcode()
+    plot_persistence_diagram(barcode2)
+
+    code1 = [[barcode[i][1],barcode[i][2]] for i in range(len(barcode))]
+    code2 = [[barcode2[i][1],barcode2[i][2]] for i in range(len(barcode))]
+    #   prepare bottleneck distance files
+    with open("code1.txt", 'w') as csvfile:
+        writer = csv.writer(csvfile,delimiter="\t")
+        writer.writerows(code1)
+
+    with open("code2.txt", 'w') as csvfile:
+        writer = csv.writer(csvfile,delimiter='\t')
+        writer.writerows(code2)
 
     #   bottleneck distance test
     bottle = BottleneckDistance()
-    distance = bottle.Distance("algorithms/bottleneck/test/test1","algorithms/bottleneck/test/test2",10)
+    distance = bottle.Distance("code1.txt", "code2.txt", 10)
     print(distance)
