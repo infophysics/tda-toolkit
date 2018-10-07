@@ -5,6 +5,16 @@ import numpy as np
 import pandas as pd
 import struct
 import csv
+import matplotlib.pyplot as plt
+from matplotlib import gridspec
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.decomposition import PCA
+import scipy.interpolate as interp
+import ipywidgets as widgets
+from IPython.display import display
+import warnings
+warnings.filterwarnings('ignore')
+
 
 '''
     TDA package for Topological Data Analysis tools
@@ -237,6 +247,7 @@ def compute_2DPHD(barcode, show_plot=True, output_file=''):
     dfDim0 = df.loc[df.iloc[:, 0] == 0]
     if dfDim1.shape[0] == 0:
         dfOut.append({'PH Dim': 'NA'}, ignore_index=True)
+        return
     xSorted = np.sort(dfDim1.iloc[:, 3].values)
     logPH = np.empty((dfDim1.shape[0], 2))
     logPH[:, 0] = xSorted
@@ -255,11 +266,11 @@ def compute_2DPHD(barcode, show_plot=True, output_file=''):
     dfOut = dfOut.append({'PH Dim': -slope[0]}, ignore_index=True)
 
     if output_file:
-        dfOut.to_csv(output_file, index=False)
+        dfOut.to_csv(output_file + ".csv", index=False)
 
     # Plots
     if show_plot:
-        plt.figure(1, figsize=(13, 4))
+        plt.figure()
         plt.tight_layout(pad=4.4, w_pad=4.5, h_pad=4.0)
         fitline = np.empty(logPH.shape)
         fitline[:, 0] = logPH[:, 0]
@@ -269,7 +280,8 @@ def compute_2DPHD(barcode, show_plot=True, output_file=''):
         plt.title("PH Dimension:  {}".format(str(round(-slope[0], 2))))
         plt.xlabel("Log(X)")
         plt.ylabel("Log(F(X))")
-        plt.show()
+        plt.savefig((output_file + ".png"))
+        #plt.show()
 
 
 def compute_2DPHD_from_file(input_file, show_plot=True, output_file=''):
@@ -278,7 +290,91 @@ def compute_2DPHD_from_file(input_file, show_plot=True, output_file=''):
     compute_2DPHD(persist, show_plot, output_file)
 
 
+
+
+
+'''
+    Sliding Window Embedding                       (Chris Tralie)
+                                                Modified by N. Carrara
+'''
+
+
+
+def get_sliding_window_1D(x, dim, Tau, dT):
+    N = len(x)
+    NWindows = int(np.floor((N-dim*Tau)/dT)) # The number of windows
+    if NWindows <= 0:
+        print("Error: Tau too large for signal extent")
+        return np.zeros((3, dim))
+    X = np.zeros((NWindows, dim)) # Create a 2D array which will store all windows
+    idx = np.arange(N)
+    for i in range(NWindows):
+        # Figure out the indices of the samples in this window
+        idxx = dT*i + Tau*np.arange(dim) 
+        start = int(np.floor(idxx[0]))
+        end = int(np.ceil(idxx[-1]))+2
+        if end >= len(x):
+            X = X[0:i, :]
+            break
+        # Do spline interpolation to fill in this window, and place
+        # it in the resulting array
+        X[i, :] = interp.spline(idx[start:end+1], x[start:end+1], idxx)
+    return X
+
+def embedding_transform_1D(X):
+    pca = PCA(n_components = 2)
+    Y = pca.fit_transform(X)
+    eigs = pca.explained_variance_
+    return Y, eigs
+
+def plot_sliding_window_1D(x, X, Y, Tau, dT):
+    NWindows = len(X)
+    dim = len(X[0])
+    N = len(x)
+    extent = Tau*dim
+    plt.figure(figsize=(9.5, 3))
+    ax = plt.subplot(121)
+    ax.plot(x)
+    ax.set_ylim((-2*max(x), 2*max(x)))
+    ax.set_title("Original Signal")
+    ax.set_xlabel("Sample Number")
+    yr = np.max(x)-np.min(x)
+    yr = [np.min(x)-0.1*yr, np.max(x)+0.1*yr]
+    #ax.plot([extent, extent], yr, 'r')
+    #ax.plot([0, 0], yr, 'r')     
+    #ax.plot([0, extent], [yr[0]]*2, 'r')
+    #ax.plot([0, extent], [yr[1]]*2, 'r')
+    ax2 = plt.subplot(122)
+    ax2.set_title("PCA of Sliding Window Embedding")
+    ax2.scatter(Y[:, 0], Y[:, 1])
+    ax2.set_aspect('equal', 'datalim')
+    plt.tight_layout()
+    plt.show()
+
+
+
 if __name__ == "__main__":
+    T = 40 # The period in number of samples
+    NPeriods = 4 # How many periods to go through
+    N = T*NPeriods # The total number of samples
+    t = np.linspace(0, 2*np.pi*NPeriods, N+1)[0:N] # Sampling indices in time
+    x = np.cos(t)  # The final signal
+    Tau = 10
+    dT = 1
+    dim = 10
+    X = get_sliding_window_1D(x, dim, Tau, dT)
+    Y, eigs = embedding_transform_1D(X)
+    plot_sliding_window_1D(x, X, Y, Tau, dT)
+
+    with open("slide_test.csv", 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerows(X)
+    #   run persistence using Ripser
+    rips = Ripser()
+    rips.ComputeBarcode("slide_test.csv", 2, 10, 1, "point-cloud",1)
+    barcode = rips.getBarcode()
+    plot_persistence_diagram(barcode)
+    '''
     grid = [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]]
     with open("square.csv", 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
@@ -321,3 +417,4 @@ if __name__ == "__main__":
     bottle = BottleneckDistance()
     distance = bottle.Distance("code1.txt", "code2.txt", 10)
     print(distance)
+    '''

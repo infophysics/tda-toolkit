@@ -127,7 +127,7 @@ void ComputePairs::compute_pairs_main(){
 						break;
 					}
 				} else {// if wc is empty, I output a PP as [birth,) 
-					outputPP(-1, birth, dcg -> threshold);
+					outputPP(dim, birth, dcg -> threshold);
 					break;
 				}
 			} else {// (B) I have a new pivot and output PP as Writepairs 
@@ -154,7 +154,7 @@ void ComputePairs::outputPP(int _dim, double _birth, double _death){
 				cout << "[" << _birth << ", )" << endl;
 			}
 
-			wp -> push_back(WritePairs(-1, _birth, dcg -> threshold));
+			wp -> push_back(WritePairs(_dim, _birth, dcg -> threshold));
 		}
 	}
 }
