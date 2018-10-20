@@ -43,9 +43,11 @@ PYBIND11_MODULE(tda, m) {
 		  //	Various filterings
 		  //	Binary filterings
 		  .def("filterBinaryVonNeumann", &Filter2D::filterBinaryVonNeumann)
+		  .def("filterBinaryMoore", &Filter2D::filterBinaryMoore)
 		  //	Save filtration
 		  .def("saveBinaryFiltration", &Filter2D::saveBinaryFiltration)
-  	  	  ;
+  	  	  .def("filter3StateAsBinary", &Filter2D::filter3StateAsBinary)  
+		  ;
   
   py::class_<Generator>(m, "Generator")
 		  .def(py::init<>())

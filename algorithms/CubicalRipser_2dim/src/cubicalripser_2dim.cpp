@@ -109,8 +109,11 @@ void CubicalRipser2D::ComputeBarcode(const char* filename, string output_filenam
 		//	Save barcode
 		int64_t p = writepairs.size();
 		for(int64_t i = 0; i < p; ++i){
+			if (writepairs[i].getDimension() == 1 && writepairs[i].getDeath() == threshold){}
+			else{
 			std::vector<double> x = {double(writepairs[i].getDimension()),double(writepairs[i].getBirth()), double(writepairs[i].getDeath())};
 			m_Barcode.push_back(x);
+			}
 		}
 		
 		ofstream writing_file;
@@ -126,10 +129,12 @@ void CubicalRipser2D::ComputeBarcode(const char* filename, string output_filenam
 
 				
 				for(int64_t i = 0; i < p; ++i){
-					writing_file << writepairs[i].getDimension() << ",";
+					if (writepairs[i].getDimension() == 1 && writepairs[i].getDeath() == threshold){}
+					else{writing_file << writepairs[i].getDimension() << ",";
 
 					writing_file << writepairs[i].getBirth() << ",";
 					writing_file << writepairs[i].getDeath() << endl;
+					}
 				}
 				writing_file.close();
 			} else {
@@ -148,6 +153,8 @@ void CubicalRipser2D::ComputeBarcode(const char* filename, string output_filenam
 				cout << "the number of pairs : " << p << endl;
 				writing_file.write((char *) &p, sizeof( int64_t )); // number of points in the diagram p
 				for(int64_t i = 0; i < p; ++i){
+					if (writepairs[i].getDimension() == 1 && writepairs[i].getDeath() == threshold){}
+					else{
 					int64_t writedim = writepairs[i].getDimension();
 					writing_file.write((char *) &writedim, sizeof( int64_t )); // dim
 
@@ -156,6 +163,7 @@ void CubicalRipser2D::ComputeBarcode(const char* filename, string output_filenam
 					
 					double writedeath = writepairs[i].getDeath();
 					writing_file.write((char *) &writedeath, sizeof( double )); // death
+					}
 				}
 				writing_file.close();
 			}		

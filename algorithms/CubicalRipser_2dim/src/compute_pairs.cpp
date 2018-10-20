@@ -147,13 +147,15 @@ void ComputePairs::outputPP(int _dim, double _birth, double _death){
 			if(print == true){
 				cout << "[" <<_birth << "," << _death << ")" << endl;
 			}
-			
+			//std::vector<double> x = {_dim, _birth, _death};
+			//m_Barcode.push_back(x);	
 			wp->push_back(WritePairs(_dim, _birth, _death));
 		} else {
 			if(print == true){
 				cout << "[" << _birth << ", )" << endl;
 			}
-
+			//std::vector<double> x = {_dim, _birth, dcg->threshold};
+			//m_Barcode.push_back(x);	
 			wp -> push_back(WritePairs(_dim, _birth, dcg -> threshold));
 		}
 	}

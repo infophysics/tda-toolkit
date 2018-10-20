@@ -31,7 +31,7 @@ class Filter2D{
 		//	Binary filterings
 		void filterBinaryVonNeumann(int threshold);
 		void filterBinaryMoore(int threshold);
-		
+		void filter3StateAsBinary(int alive);		
 		//	Save filtration
 		void saveBinaryFiltration(const char* output_file);
 };

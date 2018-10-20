@@ -153,7 +153,8 @@ void JointPairs::joint_pairs_main(){
 				if(print == true){
 					cout << "[" << birth << "," << death << ")" << endl;
 				}
-				
+				//std::vector<double> x = {0, birth, death};
+				//m_Barcode.push_back(x);
 				wp->push_back(WritePairs(0, birth, death));
 				dset.link(u, v);
 			}
@@ -165,7 +166,8 @@ void JointPairs::joint_pairs_main(){
 	if(print == true){
 		cout << "[" << min_birth << ", )" << endl;
 	}
-
+	//std::vector<double> x = {ctr->dim, min_birth, dcg->threshold};
+	//m_Barcode.push_back(x);
 	wp -> push_back(WritePairs(ctr->dim, min_birth, dcg -> threshold));
 	sort(ctr -> columns_to_reduce.begin(), ctr -> columns_to_reduce.end(), BirthdayIndexComparator());
 }
