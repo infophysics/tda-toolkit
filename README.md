@@ -37,7 +37,7 @@ Requirements: You must have CMake>=2.8.12 and a C++11 compatible compiler (GCC>=
   sudo python3 setup.py install
 ```
 ## Implementation
-```
+```python
     grid = [[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1]]
     with open("square.csv", 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
