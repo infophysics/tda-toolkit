@@ -12,11 +12,12 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
+#include <math.h>
 
 class Filter2D{
 	
 	private:
-		std::vector<std::vector<int> > m_Binary;
+		std::vector<std::vector<double> > m_Binary;
 		std::vector<std::vector<double> > m_Continuous;
 		int m_DeadCells;
 		
@@ -29,9 +30,10 @@ class Filter2D{
 		void printFiltration(std::vector<std::vector<int> > &binaryCopy);
 		//	Various filterings
 		//	Binary filterings
-		void filterBinaryVonNeumann(int threshold);
-		void filterBinaryMoore(int threshold);
-		void filter3StateAsBinary(int alive);		
+		void filterBinaryL1(double threshold);
+		void filterBinaryL2(double threshold);
+		void filterBinaryLinf(double threshold);
+		void filter3StateAsBinary(double alive);		
 		//	Save filtration
 		void saveBinaryFiltration(const char* output_file);
 };

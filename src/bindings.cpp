@@ -42,8 +42,9 @@ PYBIND11_MODULE(tda, m) {
 		  .def("loadBinaryFromFile", &Filter2D::loadBinaryFromFile)
 		  //	Various filterings
 		  //	Binary filterings
-		  .def("filterBinaryVonNeumann", &Filter2D::filterBinaryVonNeumann)
-		  .def("filterBinaryMoore", &Filter2D::filterBinaryMoore)
+		  .def("filterBinaryL1", &Filter2D::filterBinaryL1)
+		  .def("filterBinaryL2", &Filter2D::filterBinaryL2)
+		  .def("filterBinaryLinf", &Filter2D::filterBinaryLinf)
 		  //	Save filtration
 		  .def("saveBinaryFiltration", &Filter2D::saveBinaryFiltration)
   	  	  .def("filter3StateAsBinary", &Filter2D::filter3StateAsBinary)  

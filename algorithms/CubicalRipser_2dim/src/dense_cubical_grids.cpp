@@ -79,7 +79,7 @@ DenseCubicalGrids::DenseCubicalGrids(const string& filename, double _threshold, 
 					}
 				}
 				else {
-					dense2[x][y] = threshold;
+					dense2[x][y] = threshold+1;
 				}
 			}
 		}
@@ -112,7 +112,7 @@ DenseCubicalGrids::DenseCubicalGrids(const string& filename, double _threshold, 
 					} 
 				} 
 				else { 
-					dense2[x][y] = threshold; 
+					dense2[x][y] = threshold+1; 
 				} 
 			} 
 		}

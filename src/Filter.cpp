@@ -18,14 +18,14 @@ void Filter2D::loadBinaryFromFile(const char* input_file){
 			if (!std::getline(inputFile, s)) break;
 		        if (s[0] != '#') {
 		            std::istringstream ss(s);
-		            std::vector<int> record;
+		            std::vector<double> record;
 		 
 		            while (ss) {
 		                std::string line;
 		                if (!std::getline(ss, line, ','))
 		                    break;
 		                try {
-		                    record.push_back(stoi(line));
+		                    record.push_back(stof(line));
 		                }
 		                catch (const std::invalid_argument e) {
 		                    std::cout << "NaN found in file " << input_file << " line " << l
@@ -60,14 +60,14 @@ void Filter2D::countDeadCells(){
 		
 //	Various filterings
 //	Binary filterings
-void Filter2D::filterBinaryVonNeumann(int threshold){	//	only hard boundary right now
+void Filter2D::filterBinaryL1(double threshold){	//	only hard boundary right now
 	//	count the number of dead cells
 	countDeadCells();
 	int deadCells = m_DeadCells;
 	bool thres = false;
-	int currentState = 1;
+	double currentState = 1.0;
 	//	loop
-	vector<vector<int> > binaryCopy = m_Binary;
+	vector<vector<double> > binaryCopy = m_Binary;
 	while(deadCells > 0 && thres == false){
 		for (int i = 0; i < binaryCopy.size(); i++){
 			for (int j = 0; j < binaryCopy[i].size(); j++){
@@ -216,14 +216,42 @@ void Filter2D::filterBinaryVonNeumann(int threshold){	//	only hard boundary righ
 	}
 	m_Binary = binaryCopy;
 }
-void Filter2D::filterBinaryMoore(int threshold){	//	only hard boundary right now
+
+void Filter2D::filterBinaryL2(double threshold){
+	//	Make a list of all the 1 cells
+	std::vector<std::vector<double> > liveCells;
+	for (int i = 0; i < m_Binary.size(); i++){
+		for (int j = 0; j < m_Binary[i].size(); j++){
+			if (m_Binary[i][j] == 1) liveCells.push_back({i,j});
+		}
+	}
+	//	Now determine the radius for each zero
+	for (int i = 0; i < m_Binary.size(); i++){
+		for (int j = 0; j < m_Binary[i].size(); j++){
+			if (m_Binary[i][j] == 0){
+				double min_distance = 10.0e10;
+				for (int k = 0; k < liveCells.size(); k++){
+					double temp_distance = (i - liveCells[k][0])*(i - liveCells[k][0]) + (j - liveCells[k][1])*(j - liveCells[k][1]);
+					temp_distance = sqrt(temp_distance);
+					if (temp_distance <= min_distance) min_distance = temp_distance;
+				}
+				m_Binary[i][j] = min_distance + 1;
+			}
+		}
+	}
+}
+
+
+
+
+void Filter2D::filterBinaryLinf(double threshold){	//	only hard boundary right now
 	//	count the number of dead cells
 	countDeadCells();
 	int deadCells = m_DeadCells;
 	bool thres = false;
 	int currentState = 1;
 	//	loop
-	vector<vector<int> > binaryCopy = m_Binary;
+	vector<vector<double> > binaryCopy = m_Binary;
 	while(deadCells > 0 && thres == false){
 		for (int i = 0; i < binaryCopy.size(); i++){
 			for (int j = 0; j < binaryCopy[i].size(); j++){
@@ -437,7 +465,7 @@ void Filter2D::filterBinaryMoore(int threshold){	//	only hard boundary right now
 	m_Binary = binaryCopy;
 }
 
-void Filter2D::filter3StateAsBinary(int alive){
+void Filter2D::filter3StateAsBinary(double alive){
 	for (int i = 0; i < m_Binary.size(); i++){
 		for (int j = 0; j < m_Binary[i].size(); j++){
 			if (m_Binary[i][j] == alive) m_Binary[i][j] = 1;
