@@ -111,8 +111,21 @@ def save_binary_cells_to_point_cloud(input_array, output_file):
 
 #   Persistence and Barcode plotting (N. Carrara)
 
-def plot_persistence_diagram(barcode, split=True):
+def plot_persistence_diagram(barcode, split=True, threshold=-1, save_fig=''):
     dims = [barcode[i][0] for i in range(len(barcode))]
+    for d in range(len(barcode)):
+        if barcode[d][2] == threshold:
+            barcode[d][2] = -99999
+    #  find max death value
+    deaths = [barcode[i][2] for i in range(len(barcode))]
+    births = [barcode[i][1] for i in range(len(barcode))]
+    max_birth = max(births)
+    max_death = max(deaths)
+    if max(deaths) == None:
+        max_death = max_birth + 1
+    else:
+        max_death += 1
+    max_both = max(max_birth, max_death)
     #  find unique dimensions    
     unique_dims = []
     for dim in dims:
@@ -120,18 +133,25 @@ def plot_persistence_diagram(barcode, split=True):
             unique_dims.append(dim)
     if len(unique_dims) == 1:
         fig, axs = plt.subplots(1)
-        max_val = np.max(barcode[:][:])
-        y = np.linspace(0, max_val, 2)
-
         axs.plot(y, y, color='g', linestyle='--')
         for j in range(len(unique_dims)):
             birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
             death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+        #   search for components which live forever
+        for d in range(len(death_times)):
+            if death_times[d] == -99999:
+                death_times[d] = max_death
+        y = np.linspace(0, max_both, 2)
+        axs.plot(y, y, color='g', linestyle='--')
         axs.scatter(birth_times, death_times)
+        if max_death != threshold:
+            axs.axhline(y = max_death, label="$\infty$")
         axs.set_xlabel('Birth Time')
         axs.set_ylabel('Death Time')
         axs.set_title('Persistence Diagram for degree $H_%s$' % 0)
         axs.grid(True)
+        if save_fig:
+            fig.savefig(save_fig)
     else:
         #   Plot persistence diagrams for each degree separately
         if split:
@@ -139,34 +159,42 @@ def plot_persistence_diagram(barcode, split=True):
             for j in range(len(unique_dims)):
                 birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
                 death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
-
-                max_birth = np.max(birth_times)
-                max_death = np.max(death_times)
-                max_both = max(max_birth, max_death)
+                #   search for components which live forever
+                for d in range(len(death_times)):
+                    if death_times[d] == -99999:
+                        death_times[d] = max_death
                 y = np.linspace(0, max_both, 2)
-
                 axs[j].plot(y, y, color='g', linestyle='--')
+                if max_death != threshold:
+                    axs[j].axhline(y = max_death, label="$\infty$")
                 axs[j].scatter(birth_times, death_times, color='b')
                 axs[j].set_xlabel('Birth Time')
                 axs[j].set_ylabel('Death Time')
                 axs[j].set_title('Persistence Diagram for degree $H_%s$' % j)
                 axs[j].grid(True)
+            if save_fig:
+                fig.savefig(save_fig)
         #   Or together
         else:
             fig, axs = plt.subplots(1, figsize=(15,10))
-            max_val = np.max(barcode[:][:])
-            y = np.linspace(0, max_val, 2)
-
-            axs.plot(y, y, color='g', linestyle='--')
             for j in range(len(unique_dims)):
                 birth_times = [barcode[i][1] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
                 death_times = [barcode[i][2] for i in range(len(barcode)) if barcode[i][0] == unique_dims[j]]
+                for d in range(len(death_times)):
+                    if death_times[d] == -99999:
+                        death_times[d] = max_death
                 axs.scatter(birth_times, death_times, label='$H_%s$' % j)
+            if max_death != threshold:
+                    axs.axhline(y = max_death, label="$\infty$")
+            y = np.linspace(0, max_both, 2)
+            axs.plot(y, y, color='g', linestyle='--')
             axs.set_xlabel('Birth Time')
             axs.set_ylabel('Death Time')
             axs.legend()
             axs.set_title('Persistence Diagram')
             axs.grid(True)
+            if save_fig:
+                fig.savefig(save_fig)
 
     plt.show()
 
