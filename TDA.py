@@ -379,6 +379,68 @@ def plot_sliding_window_1D(x, X, Y, Tau, dT):
     plt.tight_layout()
     plt.show()
 
+#   2D sliding window embedding
+
+def getPCAVideo(I):
+    ICov = I.dot(I.T)
+    [lam, V] = np.linalg.eigh(ICov)
+    lam[np.where(lam<0)]=0
+    V = V*np.sqrt(lam[None, :])
+    return V
+
+def window_plot(dgms, Y, title):
+    fig = plt.figure(figsize=(12, 6))
+    plt.subplot(121)
+    plot_dgms(dgms)
+    plt.title("1D Persistence Diagram %s" % title)
+
+    c = plt.get_cmap('nipy_spectral')
+    C = c(np.array(np.round(np.linspace(0, 255, Y.shape[0])), dtype=np.int32))
+    C = C[:, 0:3]
+    ax2 = fig.add_subplot(122, projection='3d')
+    ax2.set_title("PCA of Sliding Window Embedding")
+    ax2.scatter(Y[:, 0], Y[:, 1], Y[:, 2], c=C)
+    ax2.set_aspect('equal', 'datalim')
+    plt.savefig(title)
+
+def anim_plot(X, title):
+    temp_im = np.zeros([len(X[0]), len(X[0])])
+    def init():
+        global fig, ax, im
+        fig = plt.figure()
+        ax = plt.axes()
+        im = ax.imshow(temp_im, interpolation='nearest', animated=True, vmin=-0.2, vmax=0.2)
+        im.set_data(temp_im)
+        return
+
+    def animate(i):
+        temp_im = X[i]
+        im.set_data(temp_im)
+        return
+
+    init()
+    animate = animation.FuncAnimation(fig, animate, frames=len(X))
+    animate.save(title, extra_args=['-vcodec', 'libx264'])
+
+def getSlidingWindowVideo(I, dim, Tau, dT):
+    N = I.shape[0]  # Number of frames
+    P = I.shape[1]  # Number of pixels (possibly after PCA)
+    pix = np.arange(P)
+    NWindows = int(np.floor((N - dim * Tau) / dT))
+    X = np.zeros((NWindows, dim * P))
+    idx = np.arange(N)
+    for i in range(NWindows):
+        idxx = dT * i + Tau * np.arange(dim)
+        start = int(np.floor(idxx[0]))
+        end = int(np.ceil(idxx[-1])) + 2
+        if end >= I.shape[0]:
+            X = X[0:i, :]
+            break
+        f = scipy.interpolate.interp2d(pix, idx[start:end + 1], I[idx[start:end + 1], :], kind='linear')
+        X[i, :] = f(pix, idxx).flatten()
+    return X
+
+
 
 
 if __name__ == "__main__":
